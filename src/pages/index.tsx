@@ -1,15 +1,6 @@
 import Head from "next/head";
 
-import {
-  Flex,
-  Box,
-  Checkbox,
-  Stack,
-  Link,
-  Heading,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import LoginButton from "@/components/atoms/LoginPage/LoginButton";
+import { Flex, Box, Stack, Heading, useColorModeValue } from "@chakra-ui/react";
 import MailInput from "@/components/atoms/LoginPage/MailInput";
 import PasswordInput from "../components/atoms/LoginPage/PasswordInput";
 import RemFor from "@/components/molucules/LoginPage/RemFor";

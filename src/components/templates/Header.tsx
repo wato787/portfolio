@@ -18,7 +18,7 @@ const Header = () => {
             <Flex align="center" columnGap="20px" fontSize="1xl">
             <Link href="/home">トップ</Link>
             <Link href="/list">顧客リスト</Link>
-            <Link href="/">カレンダー</Link>
+            <Link href="#">カレンダー</Link>
             </Flex>
           </Box>
         </Flex>
