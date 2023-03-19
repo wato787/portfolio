@@ -15,7 +15,6 @@ import {
 export default function InfoCard() {
   return (
     //      来店回数に応じて色を変える
-
     <Center py={6}>
       <Stack
         borderWidth="1px"
