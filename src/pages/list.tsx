@@ -1,5 +1,6 @@
 import SearchForm from "@/components/molucules/ListPage/SearchForm";
 import InfoCard from "@/components/organisms/TopPage/InfoCard";
+import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import { Flex } from "@chakra-ui/react";
 
@@ -18,6 +19,7 @@ const list = () => {
             <InfoCard/>
             <InfoCard/>
         </Flex>
+        <Footer/>
         </>
     );
 }

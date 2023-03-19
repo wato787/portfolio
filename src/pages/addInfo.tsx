@@ -1,6 +1,7 @@
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import { FormValues } from "@/types/AddInfoPage/type";
+
 import {
   Flex,
   FormLabel,

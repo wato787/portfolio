@@ -4,9 +4,12 @@ import { Flex, Box, Stack, Heading, useColorModeValue } from "@chakra-ui/react";
 import MailInput from "@/components/atoms/LoginPage/MailInput";
 import PasswordInput from "../components/atoms/LoginPage/PasswordInput";
 import RemFor from "@/components/molucules/LoginPage/RemFor";
+import { useRouter } from "next/router";
 
 // ログインページ
 export default function Login() {
+  const router= useRouter();
+
   return (
     <>
       <Head>
