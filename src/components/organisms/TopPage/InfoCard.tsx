@@ -3,7 +3,6 @@
 import CardBadges from "@/components/molucules/ListPage/CardBadges";
 import CardButtons from "@/components/molucules/ListPage/CardButtons";
 import {
-
   Center,
   Flex,
   Heading,
