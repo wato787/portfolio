@@ -22,9 +22,11 @@ export default function Footer() {
         align={"center"}
       >
         <Stack direction={"row"} spacing={6}>
-          <Link href="/home">Top</Link>
+          <Link href="/home">トップ</Link>
           <Link href="/list">顧客情報リスト</Link>
           <Link href="/addInfo">顧客情報追加</Link>
+          <Link href="/calendar">カレンダー</Link>
+
         </Stack>
       </Container>
 

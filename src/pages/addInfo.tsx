@@ -17,7 +17,6 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 
 
-
 const AddInfo = () => {
   const { register, handleSubmit } = useForm<FormValues>();
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
@@ -39,7 +38,7 @@ const AddInfo = () => {
     <>
       <Header />
 
-      <Flex direction="column" alignItems="center" justify="center">
+      <Flex my={4} direction="column" alignItems="center" justify="center">
         {/* 名前追加 */}
         <Box textAlign="left">
           <FormLabel pl={2}>名前</FormLabel>

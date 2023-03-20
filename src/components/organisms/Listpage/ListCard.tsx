@@ -1,5 +1,6 @@
 import CardBadges from "@/components/molucules/ListPage/CardBadges";
 import CardButtons from "@/components/molucules/ListPage/CardButtons";
+import CardDetailButton from '../../atoms/ListPage/CardDetailButton';
 import {
   Center,
   Flex,
@@ -10,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-export default function InfoCard() {
+export default function ListCard() {
   return (
     //      来店回数に応じて色を変える
     <Center py={6}>
@@ -72,7 +73,17 @@ export default function InfoCard() {
           </Flex>
           <CardBadges />
 
-          <CardButtons />
+          <Stack
+            width={"100%"}
+            mt={"2rem"}
+            direction={"row"}
+            padding={2}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <CardDetailButton />
+
+          </Stack>
         </Stack>
       </Stack>
     </Center>
