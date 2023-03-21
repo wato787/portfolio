@@ -1,7 +1,22 @@
+import React from "react";
+import { useRef } from "react";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import EditIconButton from "../../components/atoms/EditIconButton";
-import AddInfoButton from "@/components/atoms/ListPage/AddInfoButton";
+import {
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+  ModalFooter,
+  useDisclosure,
+} from "@chakra-ui/react";
 import {
   Accordion,
   AccordionButton,
@@ -13,8 +28,20 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
+import { MdOutlineAddPhotoAlternate } from "react-icons/md";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormValues } from '../../types/AddInfoPage/type';
 
-const detail = () => {
+const Detail = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { register, handleSubmit } = useForm<FormValues>();
+
+  const onSubmit:SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
+  const initialRef = useRef(null);
+
   return (
     <>
       <Header />
@@ -92,56 +119,93 @@ const detail = () => {
         </AccordionItem>
       </Accordion>
 
+      {/* 写真追加 */}
+      <Flex align={"center"} justify={"center"} pb={6}>
+        <Button rightIcon={<MdOutlineAddPhotoAlternate />} onClick={onOpen}>
+          写真追加
+        </Button>
 
+        <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>写真追加</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  // ref={register}
+                  {...register("nailPhoto")}
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={handleSubmit(onSubmit)}
+              >
+                追加
+              </Button>
+              {/* <Button onClick={onClose}>キャンセル</Button> */}
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Flex>
 
       {/* ネイル履歴写真リスト */}
-      <Flex align={"center"} justify={"center"} pb={6}>
-        <AddInfoButton text={"写真追加"} />
-        モーダルで追加画面を出す
-      </Flex>
-<p>写真３０枚でページ分割かもっと見るクリックで全写真表示ページ</p>
-      <Flex align={"center"} justify={"center"} wrap={"wrap"} gap={2} pb={"80px"}>
+
+      <p>写真３０枚でページ分割かもっと見るクリックで全写真表示ページ。写真クリックで拡大、出来ればスワイプで写真切り替え最低限矢印ボタンはつける</p>
+      <Flex
+        align={"center"}
+        justify={"center"}
+        wrap={"wrap"}
+        gap={1}
+        pb={"80px"}
+      >
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
         <Image
           src="https://source.unsplash.com/random"
           alt="image"
-          width="100px"
-          height="100px"
+          width="120px"
+          height="120px"
         />
       </Flex>
 
@@ -150,4 +214,4 @@ const detail = () => {
   );
 };
 
-export default detail;
+export default Detail;
