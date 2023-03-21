@@ -7,46 +7,49 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { AiOutlineHome } from "react-icons/ai";
+import { CgUserList } from "react-icons/cg";
+import { CalendarIcon } from "@chakra-ui/icons";
+import { Flex } from "@chakra-ui/react";
+
 export default function Footer() {
   return (
     <Box
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
+      position="fixed"
+      bottom={0}
+      w="100%"
+      zIndex={100}
     >
-      <Container
-        as={Stack}
-        maxW={"6xl"}
-        py={4}
-        spacing={4}
-        justify={"center"}
-        align={"center"}
-      >
-        <Stack direction={"row"} spacing={6}>
-          <Link href="/home">トップ</Link>
-          <Link href="/list">顧客情報リスト</Link>
-          <Link href="/addInfo">顧客情報追加</Link>
-          <Link href="/calendar">カレンダー</Link>
-
-        </Stack>
+      <Container maxW={"6xl"} py={2}>
+        <Flex justifyContent="center" columnGap={12}>
+          <Link href="/home">
+            <Flex direction="column" alignItems="center">
+              <AiOutlineHome size={30} />
+              <Text mt={2} fontSize={12}>
+                トップ
+              </Text>
+            </Flex>
+          </Link>
+          <Link href="/list">
+            <Flex direction="column" alignItems="center">
+              <CgUserList size={30} />
+              <Text mt={2} fontSize={12}>
+                顧客リスト
+              </Text>
+            </Flex>
+          </Link>
+          <Link href="/calendar">
+            <Flex direction="column" alignItems="center">
+              <CalendarIcon mt={1} boxSize={6} />
+              <Text mt={2} fontSize={12}>
+                カレンダー
+              </Text>
+            </Flex>
+          </Link>
+        </Flex>
       </Container>
-
-      <Box
-        borderTopWidth={1}
-        borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.700")}
-      >
-        <Container
-          as={Stack}
-          maxW={"6xl"}
-          py={4}
-          direction={{ base: "column", md: "row" }}
-          spacing={4}
-          justify={{ base: "center", md: "center" }}
-          align={{ base: "center", md: "center" }}
-        >
-          <Text>© 2023 rise</Text>
-        </Container>
-      </Box>
     </Box>
   );
 }

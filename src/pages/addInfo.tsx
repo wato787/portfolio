@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-
 const AddInfo = () => {
   const { register, handleSubmit } = useForm<FormValues>();
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
@@ -38,12 +37,18 @@ const AddInfo = () => {
     <>
       <Header />
 
-      <Flex my={4} direction="column" alignItems="center" justify="center">
+      <Flex
+        my={4}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        pb={{ base: "72px" }}
+      >
         {/* 名前追加 */}
         <Box textAlign="left">
           <FormLabel pl={2}>名前</FormLabel>
           <Input
-            w="lg"
+            w={{ base: "300px" }}
             placeholder="名前を入力してください"
             mb={4}
             {...register("name", { required: true })}
@@ -52,7 +57,7 @@ const AddInfo = () => {
         <Box textAlign="left">
           <FormLabel pl={2}>ニックネーム</FormLabel>
           <Input
-            w="lg"
+            w={{ base: "300px" }}
             placeholder="ニックネームを入力してください"
             mb={4}
             {...register("nickname", { required: true })}
@@ -61,17 +66,17 @@ const AddInfo = () => {
         <Box textAlign="left">
           <FormLabel pl={2}>趣味</FormLabel>
           <Input
-            w="lg"
+            w={{ base: "300px" }}
             placeholder="趣味を入力してください"
             mb={4}
             {...register("hobby")}
           />
         </Box>
-        
+
         <Box textAlign="left">
           <FormLabel pl={2}>話題メモ</FormLabel>
           <Textarea
-            w="lg"
+            w={{ base: "300px" }}
             placeholder="例) 既婚or未婚"
             mb={4}
             {...register("hobby")}
@@ -81,7 +86,7 @@ const AddInfo = () => {
         <Box textAlign="left">
           <FormLabel pl={2}>住所</FormLabel>
           <Input
-            w="lg"
+            w={{ base: "300px" }}
             placeholder="住所を入力してください"
             mb={4}
             {...register("address")}
@@ -139,23 +144,28 @@ const AddInfo = () => {
         <FormLabel>来店回数</FormLabel>
         <HStack align="center">
           <Button {...inc}>+</Button>
-          <Input {...input} {...register("visits")} w={14}/>
+          <Input {...input} {...register("visits")} w={14} />
           <Button {...dec}>-</Button>
         </HStack>
 
-        <FormLabel>爪の写真</FormLabel>
+        <FormLabel  mt={2}>爪の写真</FormLabel>
         <Input
           type="file"
-          w="lg"
+          multiple
+          w={{ base: "300px" }}
           placeholder="爪の写真をアップロードしてください"
           mb={4}
+         
           {...register("nailPhoto")}
         />
 
-        <FormLabel>顔写真</FormLabel>
+        <FormLabel mt={2}>顔写真</FormLabel>
+        <p>写真選択したらプレビュー表示する</p>
         <Input
+        
           type="file"
-          w="lg"
+          multiple
+          w={{ base: "300px" }}
           placeholder="顔写真をアップロードしてください"
           mb={4}
           {...register("facePhoto")}
@@ -166,7 +176,7 @@ const AddInfo = () => {
         </Button>
       </Flex>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

@@ -2,7 +2,8 @@ import { Button } from '@chakra-ui/react';
 const CardDoneButton = () => {
     return (
         <Button
-        flex={1}
+        px={6}
+
         fontSize={"sm"}
         rounded={"full"}
         bg={"blue.400"}

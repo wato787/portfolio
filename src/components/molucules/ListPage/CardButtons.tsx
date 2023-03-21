@@ -6,7 +6,7 @@ const CardButtons = () => {
         <Stack
             width={"100%"}
             mt={"2rem"}
-            direction={"row"}
+            direction={"column"}
             padding={2}
             justifyContent={"space-between"}
             alignItems={"center"}
