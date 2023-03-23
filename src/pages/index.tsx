@@ -1,32 +1,79 @@
 import Head from "next/head";
 
-import { Flex, Box, Stack, Heading, useColorModeValue, Button } from '@chakra-ui/react';
+import {
+  Flex,
+  Box,
+  Stack,
+  Heading,
+  useColorModeValue,
+  Button,
+  Checkbox,
+  Link,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+  ModalFooter,
+} from "@chakra-ui/react";
 import MailInput from "@/components/atoms/LoginPage/MailInput";
 import PasswordInput from "../components/atoms/LoginPage/PasswordInput";
-import RemFor from "@/components/molucules/LoginPage/RemFor";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import {auth}from "../../firebase"
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { auth } from "../../firebase";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { emailState, passwordState } from "@/Recoil/atom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import LoginButton from "../components/atoms/LoginPage/LoginButton";
+import { createEmailState, createPasswordState } from "../Recoil/atom";
 
 // ログインページ
 export default function Login() {
   const router = useRouter();
+  // ログイン情報
   const email = useRecoilValue(emailState);
   const password = useRecoilValue(passwordState);
   const [error, setError] = useState<string>("");
 
+  // サインアップ情報
+  const [createEmail, setCreateEmail] = useRecoilState(createEmailState);
+  const [createPassword, setCreatePassword] =
+    useRecoilState(createPasswordState);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   // メールアドレスとパスワードでログイン
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth,email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       router.push("/home"); // ログイン後のリダイレクト先を設定
-    } catch (error:any) {
+    } catch (error: any) {
       setError(error.message);
     }
   };
+
+  const handleSignUp = async (e: any) => {
+    e.preventDefault();
+    try {
+      await createUserWithEmailAndPassword(auth, createEmail, createPassword);
+      router.push("/home");
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+  // ログイン状態の監視
+ 
+
+ 
+
 
   return (
     <>
@@ -45,6 +92,46 @@ export default function Login() {
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"}>サインイン</Heading>
+            {/* クリエイト */}
+            <Button onClick={onOpen}>新規作成はこちら</Button>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>新規作成</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  <FormControl>
+                    <FormLabel>メールアドレス</FormLabel>
+                    <Input
+                      type="email"
+                      value={createEmail}
+                      onChange={(event) => setCreateEmail(event.target.value)}
+                      placeholder="メールアドレス"
+                    />
+                  </FormControl>
+
+                  <FormControl mt={4}>
+                    <FormLabel>パスワード</FormLabel>
+                    <Input
+                      type="password"
+                      value={createPassword}
+                      onChange={(event) =>
+                        setCreatePassword(event.target.value)
+                      }
+                      placeholder="パスワード"
+                    />
+                  </FormControl>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button onClick={handleSignUp} colorScheme="blue" mr={3}>
+                    作成
+                  </Button>
+                  <Button onClick={onClose}>戻る</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </Stack>
           <Box
             rounded={"lg"}
@@ -53,21 +140,32 @@ export default function Login() {
             p={8}
           >
             <Stack spacing={4}>
-              <MailInput  />
-              <PasswordInput  />
-              <RemFor />
+              <MailInput />
+              <PasswordInput />
+              <Stack spacing={10}>
+                <Stack
+                  direction={{ base: "column", sm: "row" }}
+                  align={"start"}
+                  justify={"space-between"}
+                >
+                  <Checkbox>Remember me</Checkbox>
+                  <Link color={"blue.400"}>Forgot password?</Link>
+                </Stack>
+                <LoginButton onClick={handleLogin} />
+              </Stack>
               {error && (
                 <Box
                   bg="red.100"
                   color="red.500"
-                  p="4"
+                  p="2"
                   rounded="md"
                   fontSize="sm"
+                  textAlign={"center"}
                 >
-                  {error}
+                  サインインに失敗しました
                 </Box>
               )}
-              <Button onClick={handleLogin}>ログイン</Button>
+              {/* <Button onClick={handleLogin}>ログイン</Button> */}
             </Stack>
           </Box>
         </Stack>

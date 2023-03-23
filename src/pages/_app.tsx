@@ -6,11 +6,11 @@ import { RecoilRoot } from "recoil";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <ChakraProvider>
-        <RecoilRoot>
+      <RecoilRoot>
+        <ChakraProvider>
           <Component {...pageProps} />
-        </RecoilRoot>
-      </ChakraProvider>
+        </ChakraProvider>
+      </RecoilRoot>
     </>
   );
 }

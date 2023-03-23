@@ -4,8 +4,11 @@ import Header from "@/components/templates/Header";
 import { StarIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import InfoCard from "../components/organisms/TopPage/InfoCard";
+import useAuth from "@/hooks/useAuth";
 
-export default function Home() {
+
+export default function Home() { 
+  useAuth();
   return (
     <>
       <Header />

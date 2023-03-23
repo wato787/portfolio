@@ -1,9 +1,7 @@
 import { Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 
-const LoginButton = () => {
-  const router= useRouter();
+const LoginButton = ({onClick}:any) => {
     return (
         <Button
                   bg={"blue.400"}
@@ -11,8 +9,7 @@ const LoginButton = () => {
                   _hover={{
                     bg: "blue.500",
                   }}
-                  //仮のクリックイベント
-                  onClick={()=>router.push('/home')}
+                  onClick={onClick}
                 >
                   Sign in
                 </Button>
