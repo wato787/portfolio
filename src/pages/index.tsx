@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { emailState, passwordState } from "@/Recoil/atom";
 import {
@@ -31,6 +31,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { createEmailState, createPasswordState } from "../Recoil/atom";
+import { doc, setDoc } from "firebase/firestore";
 
 // ログインページ
 export default function Login() {
@@ -53,8 +54,8 @@ export default function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setEmail('')
-      setPassword('')
+      setEmail("");
+      setPassword("");
       router.push("/home");
     } catch (error: any) {
       setError(error.message);
@@ -65,8 +66,15 @@ export default function Login() {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, createEmail, createPassword);
-      setCreateEmail('')
-      setCreatePassword('')
+      setCreateEmail("");
+      setCreatePassword("");
+      // ユーザをFirestoreに保存する
+      const user = auth.currentUser;
+      const usersRef = doc(db, "users", user!.uid);
+      await setDoc(usersRef, {
+        id:user!.uid,
+        email: createEmail,
+      });
       router.push("/home");
     } catch (error: any) {
       console.log(error.message);
@@ -102,7 +110,7 @@ export default function Login() {
                   <FormControl>
                     <FormLabel>メールアドレス</FormLabel>
                     <Input
-                    id="email"
+                      id="email"
                       type="email"
                       value={createEmail}
                       onChange={(event) => setCreateEmail(event.target.value)}
@@ -110,7 +118,7 @@ export default function Login() {
                     />
                     <FormLabel>パスワード</FormLabel>
                     <Input
-                    id="password"
+                      id="password"
                       type="password"
                       value={createPassword}
                       onChange={(event) =>
@@ -141,14 +149,14 @@ export default function Login() {
               <FormControl>
                 <FormLabel>メールアドレス</FormLabel>
                 <Input
-                id="mail"
+                  id="mail"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <FormLabel>パスワード</FormLabel>
                 <Input
-                id="pass"
+                  id="pass"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

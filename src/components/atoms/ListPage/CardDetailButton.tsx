@@ -4,7 +4,6 @@ const CardDetailButton = () => {
   const router = useRouter();
     return (
         <Button
-              // flex={1}
               px={8}
               fontSize={"sm"}
               rounded={"full"}

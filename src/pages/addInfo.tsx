@@ -1,7 +1,7 @@
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
-import { FormValues } from "@/types/AddInfoPage/type";
-
+import { FormInputs } from "@/types/AddInfoPage/type";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   Flex,
   FormLabel,
@@ -14,25 +14,76 @@ import {
   useNumberInput,
   Textarea,
 } from "@chakra-ui/react";
+import { auth, db, storage } from "../../firebase";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const AddInfo = () => {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const router = useRouter();
+  const [nailFiles, setNailFiles] = useState<any>([]);
+  const [faceFiles, setFaceFiles] = useState<any>([]);
+
+  const handleNailFileChange = (event:any) => {
+    const files = event.target.files;
+    const newFiles = Array.from(files);
+    setNailFiles([...nailFiles, ...newFiles]);
+  };
+
+  const handleFaceFileChange = (event:any) => {
+    const files = event.target.files;
+    const newFiles = Array.from(files);
+    setFaceFiles([...faceFiles, ...newFiles]);
+  };
+  const { register, handleSubmit } = useForm<FormInputs>();
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
-      defaultValue: 1,
-      min: 1,
+      defaultValue: 0,
+      min: 0,
     });
-
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // データの処理
-    console.log(data);
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      const user = auth.currentUser;
+
+      const nailPhotosRefs = [];
+      const facePhotosRefs = [];
+  
+      for (const nailFile of nailFiles) {
+        const storageRef = ref(storage, `${user?.uid}/nailphotos/${nailFile.name}`);
+        await uploadBytes(storageRef, nailFile);
+        const url = await getDownloadURL(storageRef);
+        nailPhotosRefs.push(url);
+      }
+  
+      for (const faceFile of faceFiles) {
+        const storageRef = ref(storage, `${user?.uid}/facephotos/${faceFile.name}`);
+        await uploadBytes(storageRef, faceFile);
+        const url = await getDownloadURL(storageRef);
+        facePhotosRefs.push(url);
+      }
+
+
+      const infoRef = collection(db, "users", user!.uid, "info");
+      const docRef =await addDoc(infoRef, {
+        ...data,
+        nailPhotos: nailPhotosRefs,
+        facePhotos: facePhotosRefs,
+      });
+      await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
+
+      router.push('/list')
+    } catch (err) {
+      console.error(err);
+    }
   };
+  
+
   return (
     <>
       <Header />
@@ -79,7 +130,7 @@ const AddInfo = () => {
             w={{ base: "300px" }}
             placeholder="例) 既婚or未婚"
             mb={4}
-            {...register("hobby")}
+            {...register("memo")}
           />
         </Box>
 
@@ -155,20 +206,18 @@ const AddInfo = () => {
           w={{ base: "300px" }}
           placeholder="爪の写真をアップロードしてください"
           mb={4}
-         
-          {...register("nailPhoto")}
+          onChange={handleNailFileChange}
         />
 
         <FormLabel mt={2}>顔写真</FormLabel>
         <p>写真選択したらプレビュー表示する</p>
         <Input
-        
           type="file"
           multiple
           w={{ base: "300px" }}
           placeholder="顔写真をアップロードしてください"
           mb={4}
-          {...register("facePhoto")}
+          onChange={handleFaceFileChange}
         />
 
         <Button colorScheme="blue" onClick={handleSubmit(onSubmit)}>
