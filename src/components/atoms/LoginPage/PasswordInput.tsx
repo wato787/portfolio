@@ -1,12 +1,12 @@
 import { passwordState } from '@/Recoil/atom';
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 const PasswordInput = () => {
-  const setPassword = useSetRecoilState(passwordState)
+  const [password,setPassword] = useRecoilState(passwordState)
     return (
          <FormControl id="password">
                 <FormLabel>パスワード</FormLabel>
-                <Input type="password" onChange={(e) => setPassword(e.target.value)} />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
               </FormControl>
     );
 }

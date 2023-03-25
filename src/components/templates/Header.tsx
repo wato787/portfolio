@@ -8,13 +8,16 @@ import { useRouter } from "next/router";
 
 const Header = () => {
   const router = useRouter();
-  const handleSignOut: any = signOut(auth)
-    .then(() => {
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
       router.push("/");
-    })
-    .catch((error) => {
-      alert(error);
-    });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Box backgroundColor="blackAlpha.700" color="white">
       <Container maxW="container.lg">

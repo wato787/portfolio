@@ -1,13 +1,13 @@
 import { emailState } from "@/Recoil/atom";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const MailInput = () => {
-    const setEmail = useSetRecoilState(emailState)
+    const [email,setEmail] = useRecoilState(emailState)
     return (
         <FormControl id="email">
                 <FormLabel>メールアドレス</FormLabel>
-                <Input type="email" onChange={(e) => setEmail(e.target.value)} />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
               </FormControl>
     );
 }

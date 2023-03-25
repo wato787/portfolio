@@ -25,9 +25,8 @@ export const errorState = atom({
   default: '',
 });
 
-// export const signInUserState = atom({
-//   key: 'signInUserState',
-//   default: {
-//       uid: ''
-//   }
-// });
+export const isLoggedInState= atom({
+  key: 'isLoggedInState',
+  default: false,
+});
+

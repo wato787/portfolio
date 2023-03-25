@@ -21,10 +21,8 @@ import {
   Input,
   ModalFooter,
 } from "@chakra-ui/react";
-import MailInput from "@/components/atoms/LoginPage/MailInput";
-import PasswordInput from "../components/atoms/LoginPage/PasswordInput";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "../../firebase";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { emailState, passwordState } from "@/Recoil/atom";
@@ -32,15 +30,15 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import LoginButton from "../components/atoms/LoginPage/LoginButton";
 import { createEmailState, createPasswordState } from "../Recoil/atom";
 
 // ログインページ
 export default function Login() {
   const router = useRouter();
   // ログイン情報
-  const email = useRecoilValue(emailState);
-  const password = useRecoilValue(passwordState);
+  const [email, setEmail] = useRecoilState(emailState);
+  const [password, setPassword] = useRecoilState(passwordState);
+
   const [error, setError] = useState<string>("");
 
   // サインアップ情報
@@ -51,10 +49,13 @@ export default function Login() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // メールアドレスとパスワードでログイン
-  const handleLogin = async () => {
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/home"); // ログイン後のリダイレクト先を設定
+      setEmail('')
+      setPassword('')
+      router.push("/home");
     } catch (error: any) {
       setError(error.message);
     }
@@ -64,16 +65,13 @@ export default function Login() {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, createEmail, createPassword);
+      setCreateEmail('')
+      setCreatePassword('')
       router.push("/home");
     } catch (error: any) {
       console.log(error.message);
     }
   };
-  // ログイン状態の監視
- 
-
- 
-
 
   return (
     <>
@@ -104,16 +102,15 @@ export default function Login() {
                   <FormControl>
                     <FormLabel>メールアドレス</FormLabel>
                     <Input
+                    id="email"
                       type="email"
                       value={createEmail}
                       onChange={(event) => setCreateEmail(event.target.value)}
                       placeholder="メールアドレス"
                     />
-                  </FormControl>
-
-                  <FormControl mt={4}>
                     <FormLabel>パスワード</FormLabel>
                     <Input
+                    id="password"
                       type="password"
                       value={createPassword}
                       onChange={(event) =>
@@ -140,8 +137,23 @@ export default function Login() {
             p={8}
           >
             <Stack spacing={4}>
-              <MailInput />
-              <PasswordInput />
+              {/* <MailInput /> */}
+              <FormControl>
+                <FormLabel>メールアドレス</FormLabel>
+                <Input
+                id="mail"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <FormLabel>パスワード</FormLabel>
+                <Input
+                id="pass"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
               <Stack spacing={10}>
                 <Stack
                   direction={{ base: "column", sm: "row" }}
@@ -151,7 +163,16 @@ export default function Login() {
                   <Checkbox>Remember me</Checkbox>
                   <Link color={"blue.400"}>Forgot password?</Link>
                 </Stack>
-                <LoginButton onClick={handleLogin} />
+                <Button
+                  onClick={handleLogin}
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                >
+                  Sign in
+                </Button>
               </Stack>
               {error && (
                 <Box
@@ -165,7 +186,6 @@ export default function Login() {
                   サインインに失敗しました
                 </Box>
               )}
-              {/* <Button onClick={handleLogin}>ログイン</Button> */}
             </Stack>
           </Box>
         </Stack>
