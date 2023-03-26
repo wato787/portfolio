@@ -1,4 +1,7 @@
 import CardButtons from "@/components/molucules/ListPage/CardButtons";
+import { Button } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { UserInfo } from '../../../types/AddInfoPage/type';
 import {
   Avatar,
   Center,
@@ -11,7 +14,9 @@ import {
 
 } from "@chakra-ui/react";
 
-export default function InfoCard() {
+export default function InfoCard({data}:{data:UserInfo}) {
+  const router = useRouter();
+
   return (
     //      来店回数に応じて色を変える
       <>
@@ -43,14 +48,52 @@ export default function InfoCard() {
           pt={2}
         >
           <Heading fontSize={"2xl"} fontFamily={"body"}>
-            名前
+            {data.name}
           </Heading>
           <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
-            ニックネーム
+            {data.nickname}
           </Text>
-          <Text>来店回数：</Text>
+          <Text>来店回数：{data.visits}</Text>
 
-          <CardButtons />
+          <Stack
+            width={"100%"}
+            mt={"2rem"}
+            direction={"column"}
+            padding={2}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+ <Button
+              px={8}
+              fontSize={"sm"}
+              rounded={"full"}
+              _focus={{
+                bg: "gray.200",
+              }}
+              onClick={()=>router.push(`list/${data.id}`)}
+            >
+              詳細
+            </Button>
+            <Button
+        px={6}
+
+        fontSize={"sm"}
+        rounded={"full"}
+        bg={"blue.400"}
+        color={"white"}
+        boxShadow={
+          "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+        }
+        _hover={{
+          bg: "blue.500",
+        }}
+        _focus={{
+          bg: "blue.500",
+        }}
+      >
+        来店済み
+      </Button>
+          </Stack>
         </Stack>
       </Stack>
     </Center>

@@ -37,17 +37,9 @@ const AddInfo = () => {
     setFaceFiles([...faceFiles, ...newFiles]);
   };
   const { register, handleSubmit } = useForm<FormInputs>();
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 0,
-      min: 0,
-    });
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+
     try {
       const user = auth.currentUser;
 
@@ -194,9 +186,14 @@ const AddInfo = () => {
 
         <FormLabel>来店回数</FormLabel>
         <HStack align="center">
-          <Button {...inc}>+</Button>
-          <Input {...input} {...register("visits")} w={14} />
-          <Button {...dec}>-</Button>
+          {/* <Input {...input} {...register("visits")} w={14} /> */}
+          <Input
+          type={"number"}
+            w={{ base: "150px" }}
+            placeholder="来店回数"
+            mb={4}
+            {...register("visits")}
+          />
         </HStack>
 
         <FormLabel  mt={2}>爪の写真</FormLabel>

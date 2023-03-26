@@ -60,8 +60,12 @@ const Detail = () => {
         where("id", "==", url)
       );
       const infoSnapshot = await getDocs(q);
-      const infoData = infoSnapshot.docs[0].data() as UserInfo;
-      setInfo(infoData);
+      if (!infoSnapshot.empty) {
+        const infoData = infoSnapshot.docs[0].data() as UserInfo;
+        setInfo(infoData);
+      } else {
+        <div>ページが見つかりません</div>;
+      }
     };
     getInfo();
   }, [user, url]);
@@ -71,9 +75,7 @@ const Detail = () => {
   };
 
   const initialRef = useRef(null);
-  console.log(info);
-  const nailPhotoList =info?.nailPhotos
-  console.log(nailPhotoList);
+  const nailPhotoList = info?.nailPhotos;
 
   return (
     <>
@@ -171,10 +173,7 @@ const Detail = () => {
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                   <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                    />
+                    <Input type="file" accept="image/*" />
                   </FormControl>
                 </ModalBody>
 
@@ -203,18 +202,11 @@ const Detail = () => {
             gap={1}
             pb={"80px"}
           >
-            <Image
-              src="https://source.unsplash.com/random"
-              alt="image"
-              width="120px"
-              height="120px"
-            />
-            <Image
-              src="https://source.unsplash.com/random"
-              alt="image"
-              width="120px"
-              height="120px"
-            />
+            {nailPhotoList?.map((src,i) => (
+              <>
+                <Image key={i} src={src} alt="image" width="120px" height="120px" />
+              </>
+            ))}
           </Flex>
 
           <Footer />

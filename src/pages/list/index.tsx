@@ -13,7 +13,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const List = () => {
   const [user, loading, error] = useAuthState(auth);
   const [listData, setListData] = useState<any>([]);
-console.log(listData)
   useEffect(() => {
     const fetchListData = async () => {
       if (!user) return;

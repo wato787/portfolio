@@ -13,4 +13,6 @@ export type FormInputs = {
   facePhotos: string[];
 };
 
-export type UserInfo = FormInputs;
+export type UserInfo = FormInputs & {
+  id: string;
+}
