@@ -14,7 +14,7 @@ import Header from "@/components/templates/Header";
 import { useListData } from "@/hooks/useListData";
 
 function Home() {
-  const listData = useListData();
+  const listData: any[] = useListData();
 
   return (
     <>

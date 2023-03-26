@@ -16,3 +16,4 @@ export type FormInputs = {
 export type UserInfo = FormInputs & {
   id: string;
 }
+

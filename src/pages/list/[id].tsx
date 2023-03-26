@@ -41,40 +41,26 @@ import {
 import { auth, db } from "../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
+import AccordionItemPanel from "@/components/atoms/AccordionItemPanel";
+import useUserInfo from "@/hooks/useUserInfo";
 
 const Detail = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit } = useForm<FormInputs>();
-  const [user, loading, error] = useAuthState(auth);
-  const [info, setInfo] = useState<UserInfo>();
   const router = useRouter();
   const currentUrl = router.asPath;
   const url = currentUrl.replace(/^\/list\//, "");
 
-  useEffect(() => {
-    if (!user) return;
-
-    const getInfo = async () => {
-      const q = query(
-        collection(db, `users/${user.uid}/info`),
-        where("id", "==", url)
-      );
-      const infoSnapshot = await getDocs(q);
-      if (!infoSnapshot.empty) {
-        const infoData = infoSnapshot.docs[0].data() as UserInfo;
-        setInfo(infoData);
-      } else {
-        <div>ページが見つかりません</div>;
-      }
-    };
-    getInfo();
-  }, [user, url]);
+  // firestoreからデータ取得
+const info =useUserInfo(url);
 
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     console.log(data);
   };
 
   const initialRef = useRef(null);
+
+  // info.nailPhotosを変数に入れてmapで展開
   const nailPhotoList = info?.nailPhotos;
 
   return (
@@ -93,66 +79,18 @@ const Detail = () => {
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>名前：{info.name}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>ニックネーム：{info.nickname}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>趣味：{info.hobby}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>メモ：{info.memo}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>話し方：{info.language}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>爪の厚さ：{info.nailThickness}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>浮きやすい部分：{info.floatingPart}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>油分：{info.oiliness}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>来店回数：{info.visits}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
-              <AccordionPanel pb={2}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text>住所：{info.address}</Text>
-                  <EditIconButton />
-                </Flex>
-              </AccordionPanel>
+              <AccordionItemPanel value={`名前:${info.name}`} />
+              <AccordionItemPanel value={`ニックネーム:${info.nickname}`} />
+              <AccordionItemPanel value={`趣味:${info.hobby}`} />
+              <AccordionItemPanel value={`メモ:${info.memo}`} />
+              <AccordionItemPanel value={`話し方:${info.language}`} />
+              <AccordionItemPanel value={`爪の厚さ:${info.nailThickness}`} />
+              <AccordionItemPanel
+                value={`浮きやすい部分:${info.floatingPart}`}
+              />
+              <AccordionItemPanel value={`油分:${info.oiliness}`} />
+              <AccordionItemPanel value={`来店回数:${info.visits}`} />
+              <AccordionItemPanel value={`住所:${info.address}`} />
             </AccordionItem>
           </Accordion>
 
@@ -202,9 +140,15 @@ const Detail = () => {
             gap={1}
             pb={"80px"}
           >
-            {nailPhotoList?.map((src,i) => (
+            {nailPhotoList?.map((src, i) => (
               <>
-                <Image key={i} src={src} alt="image" width="120px" height="120px" />
+                <Image
+                  key={i}
+                  src={src}
+                  alt="image"
+                  width="120px"
+                  height="120px"
+                />
               </>
             ))}
           </Flex>

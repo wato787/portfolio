@@ -1,33 +1,37 @@
 import { useEffect, useState } from "react";
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, where, CollectionReference, QuerySnapshot, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { UserInfo } from "../types/AddInfoPage/type";
+import { User } from "firebase/auth";
+import { UserInfo } from "@/types/AddInfoPage/type";
 
-export const useListData = () => {
+
+
+export const useListData = (): UserInfo[] => {
   const [user] = useAuthState(auth);
-  const [listData, setListData] = useState<any[]>([]);
+  const [listData, setListData] = useState<UserInfo[]>([]);
 
   useEffect(() => {
-    const fetchListData = async (currentUser: any) => {
+    const fetchListData = async (currentUser: User | null) => {
       if (!currentUser) return;
 
       const usersQuery = query(collection(db, "users"), where("id", "==", currentUser.uid));
-      const querySnapshot = await getDocs(usersQuery);
-      const promises = querySnapshot.docs.map(async (userDoc) => {
-        const infoRef = collection(doc(db, "users", userDoc.id), "info");
-        const infoQuerySnapshot = await getDocs(infoRef);
-        const infoData = infoQuerySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        return infoData;
+      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(usersQuery);
+      const promises = querySnapshot.docs.map(async (userDoc: QueryDocumentSnapshot<DocumentData>) => {
+        const infoRef: CollectionReference<DocumentData> = collection(doc(db, "users", userDoc.id), "info");
+        const infoQuerySnapshot: QuerySnapshot<DocumentData> = await getDocs(infoRef);
+        const userInfo: UserInfo[] = infoQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({ ...doc.data(), id: doc.id })) as UserInfo[];
+        return userInfo;
       });
-
+      
       const infoSnapshots = await Promise.all(promises);
       const fetchedListData = infoSnapshots.flat();
-
+      
       setListData(fetchedListData);
+      
     };
 
-    fetchListData(user);
+    fetchListData(user!);
   }, [user]);
 
   return listData;
