@@ -36,8 +36,8 @@ export default function InfoCard({data}:{data:UserInfo}) {
           <Avatar
             size="2xl"
             name="Segun Adebayo"
-            src="https://source.unsplash.com/random"
-          />{" "}
+            src={data.facePhotos[0]}
+          />
         </Flex>
         <Stack
           flex={1}

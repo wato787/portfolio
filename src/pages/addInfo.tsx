@@ -210,7 +210,6 @@ const AddInfo = () => {
         <p>写真選択したらプレビュー表示する</p>
         <Input
           type="file"
-          multiple
           w={{ base: "300px" }}
           placeholder="顔写真をアップロードしてください"
           mb={4}

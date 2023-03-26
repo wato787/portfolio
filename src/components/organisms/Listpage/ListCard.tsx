@@ -1,6 +1,7 @@
 import CardDetailButton from "../../atoms/ListPage/CardDetailButton";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { UserInfo } from '../../../types/AddInfoPage/type';
 import {
   Avatar,
   Center,
@@ -12,7 +13,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-export default function ListCard({ data }: any) {
+export default function ListCard({ data }:{data:UserInfo}) {
   const router = useRouter();
   console.log(data)
   return (
@@ -32,7 +33,7 @@ export default function ListCard({ data }: any) {
           <Avatar
             size={{ base: "xl", md: "2xl" }}
             name="Segun Adebayo"
-            src={data.facePhotos}
+            src={data.facePhotos[0]}
           />
         </Flex>
         <Stack
