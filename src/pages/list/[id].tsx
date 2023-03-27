@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
-import EditIconButton from "../../components/atoms/EditIconButton";
 import {
   Button,
   Modal,
@@ -15,53 +13,91 @@ import {
   Input,
   ModalFooter,
   useDisclosure,
-} from "@chakra-ui/react";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionItem,
   Box,
-  AccordionIcon,
-  AccordionPanel,
   Flex,
-  Image,
-  Text,
 } from "@chakra-ui/react";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { FormInputs, UserInfo } from "../../types/AddInfoPage/type";
-import {
-  getDocs,
-  collection,
-  doc,
-  getDoc,
-  query,
-  where,
-} from "firebase/firestore";
-import { auth, db } from "../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import AccordionItemPanel from "@/components/atoms/AccordionItemPanel";
-import useUserInfo from "@/hooks/useUserInfo";
 
+import { useRouter } from "next/router";
+import useUserInfo from "@/hooks/useUserInfo";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "../../../firebase";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { UserInfo } from "@/types/AddInfoPage/type";
+import InfoAccordion from "../../components/organisms/InfoAccordion";
+import Image from "next/image";
 const Detail = () => {
+  const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>("");
+  const [nailFiles, setNailFiles] = useState<File[]>([]);
+  const [nailPhotoList, setNailPhotoList] = useState<string[]>([]);
+  const [displayCount, setDisplayCount] = useState<number>(50);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { register, handleSubmit } = useForm<FormInputs>();
   const router = useRouter();
   const currentUrl = router.asPath;
   const url = currentUrl.replace(/^\/list\//, "");
 
-  // firestoreからデータ取得
-const info =useUserInfo(url);
-
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data);
+  // 画像クリックで拡大
+  const handleImageClick = (src: string) => {
+    setSelectedImage(src);
+    setIsImageOpen(true);
   };
 
-  const initialRef = useRef(null);
+  const handleClose = () => {
+    setIsImageOpen(false);
+    setSelectedImage(undefined);
+  };
+  // storageにいれる
+  const handleNailFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newFiles = Array.from(files);
+      setNailFiles([...nailFiles, ...newFiles]);
+    }
+  };
 
-  // info.nailPhotosを変数に入れてmapで展開
-  const nailPhotoList = info?.nailPhotos;
+  // firestoreからデータ取得
+  const info: UserInfo | undefined = useUserInfo(url);
+
+  // ログインユーザ情報取得
+  const user = auth.currentUser;
+
+  //  nailphoto追加
+  const AddNailPhotos = async (infoId: string) => {
+    const nailPhotosRefs: string[] = [];
+
+    for (const nailFile of nailFiles) {
+      const storageRef = ref(
+        storage,
+        `${user?.uid}/nailphotos/${nailFile.name}`
+      );
+      await uploadBytes(storageRef, nailFile);
+      const URL = await getDownloadURL(storageRef);
+      nailPhotosRefs.push(URL);
+    }
+
+    const infoDocRef = doc(db, "users", user!.uid, "info", infoId);
+    await updateDoc(infoDocRef, {
+      nailPhotos: arrayUnion(...nailPhotosRefs),
+    });
+
+    const updatedDoc = await getDoc(infoDocRef);
+    const updatedData = updatedDoc.data();
+    const updatedNailPhotoList = updatedData?.nailPhotos ?? [];
+    setNailPhotoList(updatedNailPhotoList);
+    onClose();
+  };
+
+  useEffect(() => {
+    if (info && info.nailPhotos) {
+      setNailPhotoList(info.nailPhotos);
+    } else {
+      setNailPhotoList([]);
+    }
+  }, [info, info?.nailPhotos]);
+
+  // 表示するデータを格納
+  const displayData = nailPhotoList.slice(0, displayCount);
 
   return (
     <>
@@ -69,30 +105,7 @@ const info =useUserInfo(url);
         <>
           <Header />
           {/* お客様情報 */}
-          <Accordion allowMultiple mb={4} m={2}>
-            <AccordionItem>
-              <h2>
-                <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    お客様情報
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionItemPanel value={`名前:${info.name}`} />
-              <AccordionItemPanel value={`ニックネーム:${info.nickname}`} />
-              <AccordionItemPanel value={`趣味:${info.hobby}`} />
-              <AccordionItemPanel value={`メモ:${info.memo}`} />
-              <AccordionItemPanel value={`話し方:${info.language}`} />
-              <AccordionItemPanel value={`爪の厚さ:${info.nailThickness}`} />
-              <AccordionItemPanel
-                value={`浮きやすい部分:${info.floatingPart}`}
-              />
-              <AccordionItemPanel value={`油分:${info.oiliness}`} />
-              <AccordionItemPanel value={`来店回数:${info.visits}`} />
-              <AccordionItemPanel value={`住所:${info.address}`} />
-            </AccordionItem>
-          </Accordion>
+          <InfoAccordion info={info} />
 
           {/* 写真追加 */}
           <Flex align={"center"} justify={"center"} pb={6}>
@@ -100,18 +113,19 @@ const info =useUserInfo(url);
               写真追加
             </Button>
 
-            <Modal
-              initialFocusRef={initialRef}
-              isOpen={isOpen}
-              onClose={onClose}
-            >
+            <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>写真追加</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                   <FormControl>
-                    <Input type="file" accept="image/*" />
+                    <Input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleNailFileChange}
+                    />
                   </FormControl>
                 </ModalBody>
 
@@ -119,7 +133,7 @@ const info =useUserInfo(url);
                   <Button
                     colorScheme="blue"
                     mr={3}
-                    onClick={handleSubmit(onSubmit)}
+                    onClick={() => AddNailPhotos(info.id)}
                   >
                     追加
                   </Button>
@@ -129,29 +143,52 @@ const info =useUserInfo(url);
           </Flex>
 
           {/* ネイル履歴写真リスト */}
+          <Box pb={"80px"}>
+            <Flex align={"center"} justify={"center"} wrap={"wrap"} gap={1}>
+              {displayData.map((src: string, i: number) => (
+                <Box key={i} onClick={() => handleImageClick(src)}>
+                  <Image
+                    src={src}
+                    alt="image"
+                    width={120}
+                    height={120}
+                    layout="fixed"
+                    loading="eager"
+                  />
+                </Box>
+              ))}
+            </Flex>
+            {nailPhotoList.length > displayCount && (
+              <Flex align="center" justify="center" mt={4}>
+                <Button onClick={() => setDisplayCount(displayCount + 50)}>
+                  もっと見る
+                </Button>
+              </Flex>
+            )}
+          </Box>
 
-          <p>
-            写真３０枚でページ分割かもっと見るクリックで全写真表示ページ。写真クリックで拡大、出来ればスワイプで写真切り替え最低限矢印ボタンはつける
-          </p>
-          <Flex
-            align={"center"}
-            justify={"center"}
-            wrap={"wrap"}
-            gap={1}
-            pb={"80px"}
-          >
-            {nailPhotoList?.map((src, i) => (
-              <>
-                <Image
-                  key={i}
-                  src={src}
-                  alt="image"
-                  width="120px"
-                  height="120px"
-                />
-              </>
-            ))}
-          </Flex>
+          {isImageOpen && (
+            <Box
+              position="fixed"
+              top={0}
+              bottom={0}
+              left={0}
+              right={0}
+              bg="rgba(0,0,0,0.5)"
+              onClick={handleClose}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Image
+                src={selectedImage as string}
+                alt="selected image"
+                width={300}
+                height={250}
+                layout="fixed"
+              />
+            </Box>
+          )}
 
           <Footer />
         </>

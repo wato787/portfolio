@@ -1,13 +1,11 @@
-import CardDetailButton from "../../atoms/ListPage/CardDetailButton";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { UserInfo } from '../../../types/AddInfoPage/type';
+import { UserInfo } from '../../types/AddInfoPage/type';
 import {
   Avatar,
   Center,
   Flex,
   Heading,
-  Image,
   Stack,
   Text,
   useColorModeValue,

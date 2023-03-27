@@ -11,30 +11,33 @@ import {
   RadioGroup,
   Radio,
   HStack,
-  useNumberInput,
+
   Textarea,
 } from "@chakra-ui/react";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const AddInfo = () => {
   const router = useRouter();
-  const [nailFiles, setNailFiles] = useState<any>([]);
-  const [faceFiles, setFaceFiles] = useState<any>([]);
+  const [nailFiles, setNailFiles] = useState<File[]>([]);
+  const [faceFile, setFaceFile] = useState<File|null>(null);
 
-  const handleNailFileChange = (event:any) => {
+  const handleNailFileChange = (event:ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    const newFiles = Array.from(files);
-    setNailFiles([...nailFiles, ...newFiles]);
+    if (files) {
+      const newFiles = Array.from(files);
+      setNailFiles([...nailFiles, ...newFiles]);
+    }
   };
 
-  const handleFaceFileChange = (event:any) => {
+  const handleFaceFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    const newFiles = Array.from(files);
-    setFaceFiles([...faceFiles, ...newFiles]);
+    if (files && files.length > 0) {
+      setFaceFile(files[0]);
+    }
   };
   const { register, handleSubmit } = useForm<FormInputs>();
 
@@ -53,7 +56,7 @@ const AddInfo = () => {
         nailPhotosRefs.push(url);
       }
   
-      for (const faceFile of faceFiles) {
+      if (faceFile) {
         const storageRef = ref(storage, `${user?.uid}/facephotos/${faceFile.name}`);
         await uploadBytes(storageRef, faceFile);
         const url = await getDownloadURL(storageRef);

@@ -22,11 +22,12 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import { auth, db } from "../../firebase";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { emailState, passwordState } from "@/Recoil/atom";
 import {
+  AuthError,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -37,32 +38,33 @@ import { doc, setDoc } from "firebase/firestore";
 export default function Login() {
   const router = useRouter();
   // ログイン情報
-  const [email, setEmail] = useRecoilState(emailState);
-  const [password, setPassword] = useRecoilState(passwordState);
+  const [email, setEmail] = useRecoilState<string>(emailState);
+  const [password, setPassword] = useRecoilState<string>(passwordState);
 
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<unknown>("");
 
   // サインアップ情報
-  const [createEmail, setCreateEmail] = useRecoilState(createEmailState);
+  const [createEmail, setCreateEmail] =
+    useRecoilState<string>(createEmailState);
   const [createPassword, setCreatePassword] =
-    useRecoilState(createPasswordState);
+    useRecoilState<string>(createPasswordState);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // メールアドレスとパスワードでログイン
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail("");
       setPassword("");
       router.push("/home");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      setError(error);
     }
   };
 
-  const handleSignUp = async (e: any) => {
+  const handleSignUp = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, createEmail, createPassword);
@@ -72,12 +74,12 @@ export default function Login() {
       const user = auth.currentUser;
       const usersRef = doc(db, "users", user!.uid);
       await setDoc(usersRef, {
-        id:user!.uid,
+        id: user!.uid,
         email: createEmail,
       });
       router.push("/home");
-    } catch (error: any) {
-      console.log(error.message);
+    } catch (error: unknown) {
+      console.log(error);
     }
   };
 
@@ -163,11 +165,12 @@ export default function Login() {
                 />
               </FormControl>
               <Stack spacing={10}>
+                <>
                 <Stack
                   direction={{ base: "column", sm: "row" }}
                   align={"start"}
                   justify={"space-between"}
-                >
+                  >
                   <Checkbox>Remember me</Checkbox>
                   <Link color={"blue.400"}>Forgot password?</Link>
                 </Stack>
@@ -178,22 +181,23 @@ export default function Login() {
                   _hover={{
                     bg: "blue.500",
                   }}
-                >
+                  >
                   Sign in
                 </Button>
-              </Stack>
-              {error && (
-                <Box
+                {error && (
+                  <Box
                   bg="red.100"
                   color="red.500"
                   p="2"
                   rounded="md"
                   fontSize="sm"
                   textAlign={"center"}
-                >
-                  サインインに失敗しました
-                </Box>
-              )}
+                  >
+                    サインインに失敗しました
+                  </Box>
+                )}
+                </>
+              </Stack>
             </Stack>
           </Box>
         </Stack>
