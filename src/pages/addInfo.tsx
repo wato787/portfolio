@@ -43,6 +43,7 @@ const AddInfo = () => {
   const { register, handleSubmit } = useForm<FormInputs>();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    data = { ...data, visits: Number(data.visits) };
     try {
       const user = auth.currentUser;
 
@@ -193,9 +194,8 @@ const AddInfo = () => {
 
         <FormLabel>来店回数</FormLabel>
         <HStack align="center">
-          {/* <Input {...input} {...register("visits")} w={14} /> */}
           <Input
-            type={"number"}
+            type="number"
             w={{ base: "150px" }}
             placeholder="来店回数"
             mb={4}

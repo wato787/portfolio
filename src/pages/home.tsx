@@ -10,8 +10,7 @@ import { useListData } from "@/hooks/useListData";
 
 function Home() {
   const listData: UserInfo[] = useListData();
-  const user = useAuthState(auth);
-
+ const user =auth.currentUser
   return (
     <>
       {user ? (

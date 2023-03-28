@@ -1,3 +1,4 @@
+
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { UserInfo } from "../../types/AddInfoPage/type";
@@ -10,9 +11,29 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { auth, db } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 
 export default function InfoCard({ data }: { data: UserInfo }) {
   const router = useRouter();
+  const user = auth.currentUser;
+  const [visit,setVisit]=useState<number>();
+
+
+  const handleVisitsClick = async () => {
+    const infoDocRef = doc(db, "users", user!.uid, "info", data.id);
+    const updateData:{visits:number} = {
+      visits: data.visits + 1, // 来店回数を1増やす
+    };
+    await updateDoc(infoDocRef, updateData);
+    setVisit(updateData.visits)
+  };
+
+useEffect(()=>{
+setVisit(data.visits)
+},[data])
 
   return (
     //      来店回数に応じて色を変える
@@ -46,7 +67,7 @@ export default function InfoCard({ data }: { data: UserInfo }) {
             <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
               {data.nickname}
             </Text>
-            <Text>来店回数：{data.visits}</Text>
+            <Text>来店回数：{visit}</Text>
 
             <Stack
               width={"100%"}
@@ -82,6 +103,7 @@ export default function InfoCard({ data }: { data: UserInfo }) {
                 _focus={{
                   bg: "blue.500",
                 }}
+                onClick={handleVisitsClick}
               >
                 来店済み
               </Button>

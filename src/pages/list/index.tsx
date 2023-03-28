@@ -10,7 +10,7 @@ import { useListData } from "@/hooks/useListData";
 import { UserInfo } from "@/types/AddInfoPage/type";
 
 const List = () => {
-  const user = useAuthState(auth);
+  const user = auth.currentUser;
   const listData: UserInfo[] = useListData();
   const [searchValue, setSearchValue] = useState("");
   const [displayCount, setDisplayCount] = useState<number>(30);
