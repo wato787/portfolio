@@ -15,6 +15,7 @@ import {
   useDisclosure,
   Box,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
@@ -126,6 +127,24 @@ const Detail = () => {
                       accept="image/*"
                       onChange={handleNailFileChange}
                     />
+                    <Text pt={2}>10個まで</Text>
+                    {/* プレビュー表示 */}
+                    {nailFiles.length > 0 && (
+                      <Flex wrap={"wrap"}>
+                        {nailFiles.map((file) => (
+                          <Box key={file.name}>
+                            <Box mt={2} mb={4}>
+                              <Image
+                                src={URL.createObjectURL(file)}
+                                alt="preview"
+                                width={100}
+                                height={100}
+                              />
+                            </Box>
+                          </Box>
+                        ))}
+                      </Flex>
+                    )}
                   </FormControl>
                 </ModalBody>
 

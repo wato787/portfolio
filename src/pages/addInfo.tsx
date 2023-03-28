@@ -11,21 +11,22 @@ import {
   RadioGroup,
   Radio,
   HStack,
-
   Textarea,
+  Text,
 } from "@chakra-ui/react";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ChangeEvent, useState } from 'react';
-import { useRouter } from 'next/router';
+import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 const AddInfo = () => {
   const router = useRouter();
   const [nailFiles, setNailFiles] = useState<File[]>([]);
-  const [faceFile, setFaceFile] = useState<File|null>(null);
+  const [faceFile, setFaceFile] = useState<File | null>(null);
 
-  const handleNailFileChange = (event:ChangeEvent<HTMLInputElement>) => {
+  const handleNailFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       const newFiles = Array.from(files);
@@ -42,42 +43,45 @@ const AddInfo = () => {
   const { register, handleSubmit } = useForm<FormInputs>();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-
     try {
       const user = auth.currentUser;
 
       const nailPhotosRefs = [];
       const facePhotosRefs = [];
-  
+
       for (const nailFile of nailFiles) {
-        const storageRef = ref(storage, `${user?.uid}/nailphotos/${nailFile.name}`);
+        const storageRef = ref(
+          storage,
+          `${user?.uid}/nailphotos/${nailFile.name}`
+        );
         await uploadBytes(storageRef, nailFile);
         const url = await getDownloadURL(storageRef);
         nailPhotosRefs.push(url);
       }
-  
+
       if (faceFile) {
-        const storageRef = ref(storage, `${user?.uid}/facephotos/${faceFile.name}`);
+        const storageRef = ref(
+          storage,
+          `${user?.uid}/facephotos/${faceFile.name}`
+        );
         await uploadBytes(storageRef, faceFile);
         const url = await getDownloadURL(storageRef);
         facePhotosRefs.push(url);
       }
 
-
       const infoRef = collection(db, "users", user!.uid, "info");
-      const docRef =await addDoc(infoRef, {
+      const docRef = await addDoc(infoRef, {
         ...data,
         nailPhotos: nailPhotosRefs,
         facePhotos: facePhotosRefs,
       });
       await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
 
-      router.push('/list')
+      router.push("/list");
     } catch (err) {
       console.error(err);
     }
   };
-  
 
   return (
     <>
@@ -191,7 +195,7 @@ const AddInfo = () => {
         <HStack align="center">
           {/* <Input {...input} {...register("visits")} w={14} /> */}
           <Input
-          type={"number"}
+            type={"number"}
             w={{ base: "150px" }}
             placeholder="来店回数"
             mb={4}
@@ -199,7 +203,7 @@ const AddInfo = () => {
           />
         </HStack>
 
-        <FormLabel  mt={2}>爪の写真</FormLabel>
+        <FormLabel mt={2}>爪の写真</FormLabel>
         <Input
           type="file"
           multiple
@@ -208,9 +212,25 @@ const AddInfo = () => {
           mb={4}
           onChange={handleNailFileChange}
         />
+        <Text>画像ファイルアップ同時に１０個まで</Text>
+        {nailFiles.length > 0 && (
+          <Flex wrap={"wrap"}>
+            {nailFiles.map((file) => (
+              <Box key={file.name}>
+                <Box mt={2} mb={4}>
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    width={100}
+                    height={100}
+                  />
+                </Box>
+              </Box>
+            ))}
+          </Flex>
+        )}
 
         <FormLabel mt={2}>顔写真</FormLabel>
-        <p>写真選択したらプレビュー表示する</p>
         <Input
           type="file"
           w={{ base: "300px" }}
@@ -218,6 +238,19 @@ const AddInfo = () => {
           mb={4}
           onChange={handleFaceFileChange}
         />
+        {faceFile && (
+          <Box>
+            <Text>{faceFile.name}</Text>
+            <Box mt={2} mb={4}>
+              <Image
+                src={URL.createObjectURL(faceFile)}
+                alt="preview"
+                width={150}
+                height={150}
+              />
+            </Box>
+          </Box>
+        )}
 
         <Button colorScheme="blue" onClick={handleSubmit(onSubmit)}>
           情報を追加する
