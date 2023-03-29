@@ -10,10 +10,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function ListCard({ data }:{data:UserInfo}) {
   const router = useRouter();
-  console.log(data)
+  const [visit,setVisit]=useState<number>(data.visits);
+
+
+  const bgColor = visit === 0 ? "white" : visit! < 5 ? "gray.300" : visit! < 10 ?"gray.600" :"gray.900";
+  const fontColor = visit === 0 ? "black" : visit! < 5 ? "white" :"white";
+
   return (
     //      来店回数に応じて色を変える
     <Center py={4}>
@@ -23,7 +29,7 @@ export default function ListCard({ data }:{data:UserInfo}) {
         w={{ base: "150px", sm: "100%", md: "540px" }}
         height={{ sm: "476px", md: "20rem" }}
         direction={{ base: "column", md: "row" }}
-        bg={useColorModeValue("white", "gray.900")}
+        bg={bgColor}
         boxShadow={"2xl"}
         padding={4}
       >
@@ -42,10 +48,10 @@ export default function ListCard({ data }:{data:UserInfo}) {
           p={1}
           pt={2}
         >
-          <Heading fontSize={{ base: "1xl", md: "2xl" }} fontFamily={"body"}>
+          <Heading color={fontColor} fontSize={{ base: "1xl", md: "2xl" }} fontFamily={"body"}>
             {data.name}
           </Heading>
-          <Text fontWeight={600} color={"gray.500"} size="sm">
+          <Text color={fontColor}  fontWeight={600}  size="sm">
             {data.nickname}
           </Text>
 

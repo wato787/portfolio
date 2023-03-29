@@ -14,7 +14,6 @@ import {
 import { auth, db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { SmallCloseIcon } from '@chakra-ui/icons';
 
 
 export default function InfoCard({ data }: { data: UserInfo }) {
