@@ -43,10 +43,10 @@ const AddInfo = () => {
   const { register, handleSubmit } = useForm<FormInputs>();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    // React-Hook−Formを使うと文字列として扱われてしまう為来店回数をnumber型に変換
     data = { ...data, visits: Number(data.visits) };
     try {
       const user = auth.currentUser;
-
       const nailPhotosRefs = [];
       const facePhotosRefs = [];
 

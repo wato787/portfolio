@@ -10,6 +10,7 @@ import {
 import { auth, db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { ChangeEvent, useState } from "react";
+import {useEffect} from 'react';
 
 const AccordionItemPanel = ({
   value,
@@ -24,8 +25,9 @@ const AccordionItemPanel = ({
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string | number>(value);
-const [text,setText]=useState(value)
+  const [text, setText] = useState(value);
   const user = auth.currentUser;
+
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -34,10 +36,14 @@ const [text,setText]=useState(value)
   const handleSaveClick = async () => {
     setIsEditing(false);
     const infoDocRef = doc(db, "users", user!.uid, "info", infoId);
-    const updateData:{[key:string]:string|number} = {};
-    updateData[fieldName] = newValue;
+    const updateData: { [key: string]: string | number } = {};
+    if (fieldName === "visits") {
+      updateData[fieldName] = Number(newValue);
+    } else {
+      updateData[fieldName] = newValue;
+    }
     await updateDoc(infoDocRef, updateData);
-    setText(newValue)
+    setText(newValue);
   };
 
   const handleCancelClick = () => {
@@ -48,8 +54,6 @@ const [text,setText]=useState(value)
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNewValue(event.target.value);
   };
-
- 
 
   return (
     <AccordionPanel pb={2}>

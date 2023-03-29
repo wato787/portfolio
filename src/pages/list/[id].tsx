@@ -86,6 +86,7 @@ const Detail = () => {
     const updatedData = updatedDoc.data();
     const updatedNailPhotoList = updatedData?.nailPhotos ?? [];
     setNailPhotoList(updatedNailPhotoList);
+    setNailFiles([])
     onClose();
   };
 
@@ -139,6 +140,8 @@ const Detail = () => {
                                 alt="preview"
                                 width={100}
                                 height={100}
+                    layout="intrinsic"
+
                               />
                             </Box>
                           </Box>
@@ -171,7 +174,7 @@ const Detail = () => {
                     alt="image"
                     width={120}
                     height={120}
-                    layout="fixed"
+                    layout="intrinsic"
                     loading="eager"
                   />
                 </Box>
@@ -204,7 +207,8 @@ const Detail = () => {
                 alt="selected image"
                 width={300}
                 height={250}
-                layout="fixed"
+                layout="intrinsic"
+
               />
             </Box>
           )}
