@@ -1,5 +1,5 @@
 
-import { Button } from "@chakra-ui/react";
+import { Button, CloseButton, IconButton, useColorModeValue } from '@chakra-ui/react';
 import { useRouter } from "next/router";
 import { UserInfo } from "../../types/AddInfoPage/type";
 import {
@@ -9,17 +9,19 @@ import {
   Heading,
   Stack,
   Text,
-  useColorModeValue,
+ 
 } from "@chakra-ui/react";
 import { auth, db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { SmallCloseIcon } from '@chakra-ui/icons';
 
 
 export default function InfoCard({ data }: { data: UserInfo }) {
   const router = useRouter();
   const user = auth.currentUser;
   const [visit,setVisit]=useState<number>();
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleVisitsClick = async () => {
@@ -29,26 +31,45 @@ export default function InfoCard({ data }: { data: UserInfo }) {
     };
     await updateDoc(infoDocRef, updateData);
     setVisit(updateData.visits)
+    setIsLoading(true);
   };
 
 useEffect(()=>{
 setVisit(data.visits)
 },[data])
 
+// 来店回数に応じて色変更
+const bgColor = visit === 0 ? "white" : visit! < 5 ? "gray.300" : visit! < 10 ?"gray.600" :"gray.900";
+const fontColor = visit === 0 ? "black" : visit! < 5 ? "white" :"white";
+
   return (
-    //      来店回数に応じて色を変える
+
     <>
       <p>-13:00-</p>
-      <Center py={4}>
+      <Center py={4} position="relative">
+      {isLoading && (
+          <Center
+            position="absolute"
+            top={0}
+            left={0}
+            w="100%"
+            h="100%"
+            bg="rgba(255,255, 255, 0.9)"
+            zIndex={10}
+          >
+            <Text>来店済み</Text>
+            <CloseButton  position="absolute" top={6} right={12} onClick={()=>setIsLoading(false)}/>
+          </Center>
+        )}
         <Stack
           borderWidth="1px"
           borderRadius="lg"
           w={{ base: "300px", sm: "100%", md: "540px" }}
           height={{ sm: "476px", md: "20rem" }}
           direction={{ base: "row", md: "row" }}
-          bg={useColorModeValue("white", "gray.900")}
           boxShadow={"2xl"}
           padding={4}
+          bg={bgColor}
         >
           <Flex align="center" justify="center" flex={1} bg="black">
             <Avatar size="2xl" name="Segun Adebayo" src={data.facePhotos[0]} />
@@ -61,13 +82,13 @@ setVisit(data.visits)
             p={1}
             pt={2}
           >
-            <Heading fontSize={"2xl"} fontFamily={"body"}>
+            <Heading color={fontColor} fontSize={"2xl"} fontFamily={"body"}>
               {data.name}
             </Heading>
-            <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
+            <Text color={fontColor} fontWeight={600} size="sm" mb={4}>
               {data.nickname}
             </Text>
-            <Text>来店回数：{visit}</Text>
+            <Text color={fontColor}>来店回数：{visit}</Text>
 
             <Stack
               width={"100%"}
