@@ -8,20 +8,16 @@ import {
   Heading,
   Stack,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
 export default function ListCard({ data }:{data:UserInfo}) {
   const router = useRouter();
-  const [visit,setVisit]=useState<number>(data.visits);
-
-
-  const bgColor = visit === 0 ? "white" : visit! < 5 ? "gray.300" : visit! < 10 ?"gray.600" :"gray.900";
+  // 来店回数で色変更
+  const visit=data.visits;
+  const bgColor = visit === 0 ? "white" : visit! < 5 ? "gray.300" : visit! < 10 ? "gray.600" : "gray.900";
   const fontColor = visit === 0 ? "black" : visit! < 5 ? "white" :"white";
 
   return (
-    //      来店回数に応じて色を変える
     <Center py={4}>
       <Stack
         borderWidth="1px"
@@ -54,7 +50,6 @@ export default function ListCard({ data }:{data:UserInfo}) {
           <Text color={fontColor}  fontWeight={600}  size="sm">
             {data.nickname}
           </Text>
-
           <Stack
             width={"100%"}
             direction={"row"}

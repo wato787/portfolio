@@ -1,32 +1,21 @@
-import { atom } from 'recoil';
+import { atom } from "recoil";
 // ログイン
 export const emailState = atom({
-  key: 'emailState',
-  default: '',
+  key: "emailState",
+  default: "",
 });
 
 export const passwordState = atom({
-  key: 'passwordState',
-  default: '',
+  key: "passwordState",
+  default: "",
 });
 // サインアップ
 export const createEmailState = atom({
-  key: 'createEmailState',
-  default: '',
+  key: "createEmailState",
+  default: "",
 });
 
 export const createPasswordState = atom({
-  key: 'createPasswordState',
-  default: '',
+  key: "createPasswordState",
+  default: "",
 });
-
-export const errorState = atom({
-  key: 'errorState',
-  default: '',
-});
-
-export const isLoggedInState= atom({
-  key: 'isLoggedInState',
-  default: false,
-});
-

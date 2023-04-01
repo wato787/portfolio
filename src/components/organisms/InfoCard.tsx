@@ -13,13 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { auth, db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 export default function InfoCard({ data }: { data: UserInfo }) {
   const router = useRouter();
   const user = auth.currentUser;
-  const [visit,setVisit]=useState<number>();
+  const [visit,setVisit]=useState<number>(data.visits);
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -32,10 +32,6 @@ export default function InfoCard({ data }: { data: UserInfo }) {
     setVisit(updateData.visits)
     setIsLoading(true);
   };
-
-useEffect(()=>{
-setVisit(data.visits)
-},[data])
 
 // 来店回数に応じて色変更
 const bgColor = visit === 0 ? "white" : visit! < 5 ? "gray.300" : visit! < 10 ?"gray.600" :"gray.900";

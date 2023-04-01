@@ -22,12 +22,11 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { FormEvent, MouseEvent, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { auth, db } from "../../firebase";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState} from "recoil";
 import { emailState, passwordState } from "@/Recoil/atom";
 import {
-  AuthError,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";

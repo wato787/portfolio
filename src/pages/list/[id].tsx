@@ -86,7 +86,7 @@ const Detail = () => {
     const updatedData = updatedDoc.data();
     const updatedNailPhotoList = updatedData?.nailPhotos ?? [];
     setNailPhotoList(updatedNailPhotoList);
-    setNailFiles([])
+    setNailFiles([]);
     onClose();
   };
 
@@ -114,7 +114,6 @@ const Detail = () => {
             <Button rightIcon={<MdOutlineAddPhotoAlternate />} onClick={onOpen}>
               写真追加
             </Button>
-
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
@@ -140,8 +139,7 @@ const Detail = () => {
                                 alt="preview"
                                 width={100}
                                 height={100}
-                    layout="intrinsic"
-
+                                layout="intrinsic"
                               />
                             </Box>
                           </Box>
@@ -208,11 +206,9 @@ const Detail = () => {
                 width={300}
                 height={250}
                 layout="intrinsic"
-
               />
             </Box>
           )}
-
           <Footer />
         </>
       )}

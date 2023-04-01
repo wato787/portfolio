@@ -5,6 +5,7 @@ import {
   AccordionIcon,
   AccordionItem,
   Box,
+  Heading,
 } from "@chakra-ui/react";
 import AccordionItemPanel from "../atoms/AccordionItemPanel";
 
@@ -13,14 +14,14 @@ const InfoAccordion = ({ info }: { info: UserInfo }) => {
   return (
     <Accordion allowMultiple mb={4} m={2}>
       <AccordionItem>
-        <h2>
+        <Heading as={"h2"}>
           <AccordionButton>
             <Box as="span" flex="1" textAlign="left">
               お客様情報
             </Box>
             <AccordionIcon />
           </AccordionButton>
-        </h2>
+        </Heading>
         <AccordionItemPanel beforeValue={"名前:"} value={info.name} infoId={info.id} fieldName="name"/>
         <AccordionItemPanel beforeValue={"ニックネーム:"} value={info.nickname} infoId={info.id} fieldName="nickname"/>
         <AccordionItemPanel beforeValue={"趣味:"} value={info.hobby} infoId={info.id} fieldName="hobby"/>
