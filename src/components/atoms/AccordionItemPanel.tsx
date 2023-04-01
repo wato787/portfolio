@@ -11,22 +11,23 @@ import { auth, db } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { ChangeEvent, useState } from "react";
 
+interface Item {
+  value: string | number;
+  infoId: string;
+  beforeValue: string;
+  fieldName: string;
+}
+
 const AccordionItemPanel = ({
   value,
   infoId,
   beforeValue,
   fieldName,
-}: {
-  value: string | number;
-  infoId: string;
-  beforeValue: string;
-  fieldName: string;
-}) => {
+}: Item) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string | number>(value);
   const [text, setText] = useState(value);
   const user = auth.currentUser;
-
 
   const handleEditClick = () => {
     setIsEditing(true);
