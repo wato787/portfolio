@@ -1,3 +1,4 @@
+import { TodayUserInfo } from "@/types/type";
 import { atom } from "recoil";
 // ログイン
 export const emailState = atom({
@@ -18,4 +19,9 @@ export const createEmailState = atom({
 export const createPasswordState = atom({
   key: "createPasswordState",
   default: "",
+});
+
+export const matchedDataState = atom<TodayUserInfo[]>({
+  key: "matchedDataState",
+  default: [],
 });

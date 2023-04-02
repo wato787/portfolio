@@ -1,7 +1,7 @@
 
 import { Button, CloseButton, IconButton, useColorModeValue } from '@chakra-ui/react';
 import { useRouter } from "next/router";
-import { UserInfo } from "../../types/AddInfoPage/type";
+import { TodayUserInfo } from "../../types/type";
 import {
   Avatar,
   Center,
@@ -16,7 +16,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 
 
-export default function InfoCard({ data }: { data: UserInfo }) {
+export default function InfoCard({ data}: { data: TodayUserInfo }) {
   const router = useRouter();
   const user = auth.currentUser;
   const [visit,setVisit]=useState<number>(data.visits);
@@ -40,7 +40,7 @@ const fontColor = visit === 0 ? "black" : visit! < 5 ? "white" :"white";
   return (
 
     <>
-      <p>-13:00-</p>
+      <p>-{data.start}-</p>
       <Center py={4} position="relative">
       {isLoading && (
           <Center

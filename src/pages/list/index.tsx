@@ -6,7 +6,7 @@ import { Flex, Spinner, Input, Button, Box } from "@chakra-ui/react";
 import AddInfoButton from "@/components/atoms/ListPage/AddInfoButton";
 import { auth } from "../../../firebase";
 import { useListData } from "@/hooks/useListData";
-import { UserInfo } from "@/types/AddInfoPage/type";
+import { UserInfo } from "@/types/type";
 
 const List = () => {
   const user = auth.currentUser;

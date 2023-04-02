@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase";
-import { UserInfo } from "../types/AddInfoPage/type";
+import { UserInfo } from "../types/type";
 
 const useUserInfo = (url:string) => {
   const [user] = useAuthState(auth);
