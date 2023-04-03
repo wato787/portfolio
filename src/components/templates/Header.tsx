@@ -41,14 +41,8 @@ const Header = () => {
           </Link>
           <Box>
             <Flex align="center" columnGap="20px" fontSize="1xl">
-              <Link href="/list">
-                <CgUserList size={30} />
-              </Link>
-
-              <Link href="/calendar">
-                <CalendarIcon boxSize={6} />
-              </Link>
-              <Button onClick={handleSignOut}>ログアウト</Button>
+              
+              <Button  onClick={handleSignOut}>ログアウト</Button>
             </Flex>
           </Box>
         </Flex>

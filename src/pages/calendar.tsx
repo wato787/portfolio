@@ -1,6 +1,7 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import Header from "../components/templates/Header";
 import Footer from "@/components/templates/Footer";
+import listPlugin from '@fullcalendar/list';
 import {
   Box,
   useDisclosure,
@@ -18,7 +19,6 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import FullCalendar from "@fullcalendar/react";
-import { v4 as uuidv4 } from "uuid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { EventClickArg, EventInput } from "@fullcalendar/core";
@@ -31,8 +31,10 @@ import {
   query,
   where,
   getDocs,
+
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
 
 const MyCalendar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -42,6 +44,8 @@ const MyCalendar = () => {
   const [eventDate, setEventDate] = useState("");
   const [events, setEvents] = useState<EventInput[]>([]);
   const [user] = useAuthState(auth);
+  const router = useRouter();
+  const [view, setView] = useState("dayGridMonth");
   // 候補リストを管理するstate
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -58,17 +62,16 @@ const MyCalendar = () => {
         where("name", "<=", value + "\uf8ff")
       );
       const querySnapshot = await getDocs(q);
-      const data:string[] = querySnapshot.docs.map((doc) => doc.data().name);
+      const data: string[] = querySnapshot.docs.map((doc) => doc.data().name);
       setSuggestions(data);
     };
     fetchData();
   };
 
   const handleAddEvent = async () => {
-    if(eventTitle==="")return;
+    if (eventTitle === "") return;
     if (calendarRef.current) {
       const event: EventInput = {
-        id: uuidv4(),
         title: eventTitle,
         start: new Date(`${eventDate}T${eventTime}:00`),
       };
@@ -103,13 +106,21 @@ const MyCalendar = () => {
     }
   };
 
+
+  useEffect(() => {
+    if (router.query.view === "listWeek") {
+      setView("listWeek");
+    }
+  }, [router.query.view]);
+
+
   useEffect(() => {
     if (!user) return;
 
     const unsubscribe = onSnapshot(
       collection(db, "users", user!.uid, "events"),
       (snapshot) => {
-        const data: { start: Date; id: string; }[]= snapshot.docs.map((doc) => {
+        const data: { start: Date; id: string }[] = snapshot.docs.map((doc) => {
           const docData = doc.data();
           // data.startをDate型に変換
           const start = new Date(
@@ -185,7 +196,7 @@ const MyCalendar = () => {
             </ModalContent>
           </Modal>
 
-          <Box fontSize={12} m={4} pb={{ base: "72px" }}>
+          <Box fontSize={12} mt={4} pb={{ base: "72px" }}>
             <FullCalendar
               height="500px"
               ref={calendarRef}
@@ -195,9 +206,9 @@ const MyCalendar = () => {
                 right: "dayGridMonth,dayGridDay",
               }}
               buttonText={{
-                today: "今月",
                 month: "月",
                 day: "日",
+
               }}
               businessHours={true} //休日色付け
               editable={true} // イベント操作の可否
@@ -208,9 +219,11 @@ const MyCalendar = () => {
                 (e.dayNumberText = e.dayNumberText.replace("日", ""))
               }
               locale="ja"
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
+              plugins={[dayGridPlugin, interactionPlugin,listPlugin]}
+              initialView={view}
               events={events}
+             
+              
             />
           </Box>
           <Footer />

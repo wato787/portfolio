@@ -1,6 +1,6 @@
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
-import { FormInputs } from "@/types/AddInfoPage/type";
+import { FormInputs } from "@/types/type";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   Flex,

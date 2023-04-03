@@ -24,7 +24,7 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firebase";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-import { UserInfo } from "@/types/AddInfoPage/type";
+import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
 const Detail = () => {
