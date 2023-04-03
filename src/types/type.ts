@@ -19,6 +19,7 @@ export type UserInfo = FormInputs & {
 
 export type TodayUserInfo = UserInfo & {
   start: string;
+  eventId:string
 };
 
 export type TodayEventData= {

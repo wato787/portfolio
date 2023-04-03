@@ -1,13 +1,30 @@
-import { CalendarIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, Flex, Heading } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  IconButton,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
-import { CgUserList } from "react-icons/cg";
+
 import { useRouter } from "next/router";
+import { useRef } from "react";
+import { MdLogout } from "react-icons/md";
 
 const Header = () => {
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<any>();
 
   const handleSignOut = async () => {
     try {
@@ -41,8 +58,32 @@ const Header = () => {
           </Link>
           <Box>
             <Flex align="center" columnGap="20px" fontSize="1xl">
-              
-              <Button  onClick={handleSignOut}>ログアウト</Button>
+              <IconButton aria-label="Logout" colorScheme='teal' icon={<MdLogout/>} onClick={onOpen}>ログアウト</IconButton>
+
+              <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      ログアウト
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>ログアウトしますか？</AlertDialogBody>
+
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onClose}>
+                        いいえ
+                      </Button>
+                      <Button colorScheme="red" onClick={handleSignOut} ml={3}>
+                        はい
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
             </Flex>
           </Box>
         </Flex>

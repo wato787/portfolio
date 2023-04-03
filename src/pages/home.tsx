@@ -1,50 +1,24 @@
 import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
-import { auth, db } from "../../firebase";
+import { auth } from "../../firebase";
 import { TodayUserInfo, UserInfo, TodayEventData } from "../types/type";
 import InfoCard from "../components/organisms/InfoCard";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import { useListData } from "@/hooks/useListData";
-import { startOfDay, endOfDay, format } from "date-fns";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {  format } from "date-fns";
 import { useEffect } from "react";
-import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { matchedDataState } from '../Recoil/atom';
+import { matchedDataState } from "../Recoil/atom";
+import { useFetchTodayEvents } from '../hooks/useFetchToadyEvents';
 
 function Home() {
-  const [todayEvents, setTodayEvents] = useState<TodayEventData[]>([]);
   const listData: UserInfo[] = useListData();
   const [matchedData, setMatchedData] = useRecoilState(matchedDataState);
   const user = auth.currentUser;
-
-  useEffect(() => {
-    const fetchTodayEvents = async () => {
-      const todayStart = startOfDay(new Date());
-      const todayEnd = endOfDay(new Date());
-
-      const eventsRef = collection(db, "users", user!.uid, "events");
-      const todayEventsQuery = query(
-        eventsRef,
-        where("start", ">=", todayStart),
-        where("start", "<=", todayEnd)
-      );
-
-      const todayEventsSnapshot = await getDocs(todayEventsQuery);
-      const todayEventsData = todayEventsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as TodayEventData[];
-
-      setTodayEvents(todayEventsData);
-    };
-
-    if (user) {
-      fetchTodayEvents();
-    }
-  }, [user]);
-
+  // 今日のイベントを取得
+  const todayEvents=useFetchTodayEvents();
+// 昇順に並び替え
   useEffect(() => {
     const matched = listData.filter((data) =>
       todayEvents.some((event) => event.title === data.name)
@@ -61,6 +35,7 @@ function Home() {
       return {
         ...data,
         start: startTime,
+        eventId: todayEventData!.id,
       };
     });
 
@@ -74,9 +49,7 @@ function Home() {
       return 0;
     });
     setMatchedData(matchedWithData);
-  }, [listData, todayEvents,setMatchedData]);
-
-
+  }, [listData, todayEvents, setMatchedData]);
 
   return (
     <>

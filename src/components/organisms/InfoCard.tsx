@@ -12,7 +12,7 @@ import {
  
 } from "@chakra-ui/react";
 import { auth, db } from "../../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 
 
@@ -23,7 +23,7 @@ export default function InfoCard({ data}: { data: TodayUserInfo }) {
   const [isLoading, setIsLoading] = useState(false);
 
 
-  const handleVisitsClick = async () => {
+  const handleVisitsClick = async (eventId:string) => {
     const infoDocRef = doc(db, "users", user!.uid, "info", data.id);
     const updateData:{visits:number} = {
       visits: data.visits + 1, // 来店回数を1増やす
@@ -31,6 +31,11 @@ export default function InfoCard({ data}: { data: TodayUserInfo }) {
     await updateDoc(infoDocRef, updateData);
     setVisit(updateData.visits)
     setIsLoading(true);
+// 来店済みのイベント削除
+    const eventDocRef = doc(db, "users", user!.uid, "events", data.eventId);
+    if (eventId === data.eventId) {
+      await deleteDoc(eventDocRef);
+    }
   };
 
 // 来店回数に応じて色変更
@@ -119,7 +124,7 @@ const fontColor = visit === 0 ? "black" : visit! < 5 ? "white" :"white";
                 _focus={{
                   bg: "blue.500",
                 }}
-                onClick={handleVisitsClick}
+                onClick={()=>handleVisitsClick(data.eventId)}
               >
                 来店済み
               </Button>

@@ -1,7 +1,7 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import Header from "../components/templates/Header";
 import Footer from "@/components/templates/Footer";
-import listPlugin from '@fullcalendar/list';
+import listPlugin from "@fullcalendar/list";
 import {
   Box,
   useDisclosure,
@@ -31,7 +31,8 @@ import {
   query,
   where,
   getDocs,
-
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
@@ -77,20 +78,32 @@ const MyCalendar = () => {
       };
       try {
         // Firestoreにドキュメントを追加
-        await addDoc(collection(db, "users", user!.uid, "events"), {
-          ...event,
-          createdAt: serverTimestamp(),
-        });
+        const docRef = await addDoc(
+          collection(db, "users", user!.uid, "events"),
+          {
+            ...event,
+            createdAt: serverTimestamp(),
+          }
+        );
+        await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
+  
+        // カレンダーにイベントが追加されていない場合にのみ追加する
+        const calendarApi = calendarRef.current.getApi();
+        if (!calendarApi.getEventById(docRef.id)) {
+          calendarApi.addEvent({
+            ...event,
+            id: docRef.id,
+          });
+        }
       } catch (error) {
         console.error(error);
       }
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.addEvent(event);
     }
     setEventTitle("");
     setEventTime("");
     onClose();
   };
+  
 
   const handleDateClick = (arg: DateClickArg) => {
     setEventDate(arg.dateStr); // クリックした日付を設定する
@@ -105,14 +118,12 @@ const MyCalendar = () => {
       calendarApi.changeView("dayGridDay");
     }
   };
-
-
+// urlで表示変更
   useEffect(() => {
     if (router.query.view === "listWeek") {
       setView("listWeek");
     }
   }, [router.query.view]);
-
 
   useEffect(() => {
     if (!user) return;
@@ -208,7 +219,6 @@ const MyCalendar = () => {
               buttonText={{
                 month: "月",
                 day: "日",
-
               }}
               businessHours={true} //休日色付け
               editable={true} // イベント操作の可否
@@ -219,11 +229,9 @@ const MyCalendar = () => {
                 (e.dayNumberText = e.dayNumberText.replace("日", ""))
               }
               locale="ja"
-              plugins={[dayGridPlugin, interactionPlugin,listPlugin]}
+              plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
               initialView={view}
               events={events}
-             
-              
             />
           </Box>
           <Footer />
