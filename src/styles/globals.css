@@ -1,4 +1,31 @@
-body{
+body {
   margin: 0;
   padding: 0;
+}
+.fc .fc-daygrid-day-bg .fc-non-business {
+  background-color: rgb(23, 15, 15) ;
+
+}
+.fc .fc-day-sun a[data-navlink]{
+  color: rgb(235, 91, 91);
+  }
+.fc .fc-day-sat a[data-navlink]{
+  color: rgb(103, 103, 238);
+  }
+
+
+.fc-theme-standard .fc-list-day-cushion {
+  background: #000;
+}
+
+.fc-event {
+  background: rgb(59, 59, 59);
+  color: #fff;
+}
+.fc .fc-button-group > .fc-button {
+  background: #000;
+  padding: .5rem;
+}
+.fc .fc-button-group > .fc-button.fc-button-active {
+  background: #000;
 }
