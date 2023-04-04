@@ -17,6 +17,7 @@ import {
   Button,
   Spinner,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 import FullCalendar from "@fullcalendar/react";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
@@ -36,6 +37,7 @@ import {
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
+import { FormLabel } from '@chakra-ui/react';
 
 const MyCalendar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,24 +52,28 @@ const MyCalendar = () => {
   // 候補リストを管理するstate
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  // 予測変換
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEventTitle(value);
-
+  
     // Firestoreから候補を検索してstateに保存する
     const fetchData = async () => {
-      const q = query(
-        collection(db, "users", user!.uid, "info"),
-        where("name", ">=", value),
-        where("name", "<=", value + "\uf8ff")
-      );
-      const querySnapshot = await getDocs(q);
-      const data: string[] = querySnapshot.docs.map((doc) => doc.data().name);
-      setSuggestions(data);
+      if (value !== "") { // 入力値が空文字列でない場合にのみクエリを実行する
+        const q = query(
+          collection(db, "users", user!.uid, "info"),
+          where("name", ">=", value),
+          where("name", "<=", value + "\uf8ff")
+        );
+        const querySnapshot = await getDocs(q);
+        const data: string[] = querySnapshot.docs.map((doc) => doc.data().name);
+        setSuggestions(data);
+      } else {
+        setSuggestions([]); // 入力値が空文字列の場合には空の配列をセットする
+      }
     };
     fetchData();
   };
+  
 
   // 予定追加
   const handleAddEvent = async () => {
@@ -161,11 +167,13 @@ const MyCalendar = () => {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader color={"black"}>{eventDate}</ModalHeader>
-              <ModalCloseButton />
+              <ModalCloseButton color={"black"}/>
               <ModalBody pb={6}>
                 <FormControl>
+                  <Text mb={1} fontSize={"sm"} color={"black"}>※顧客リストと同じ名前を入力してください</Text>
                   <Input
                     type="text"
+                    color={"black"}
                     placeholder="名前"
                     value={eventTitle}
                     onChange={handleTitleChange}
@@ -178,6 +186,7 @@ const MyCalendar = () => {
                     <Button
                     key={index}
                     size="sm"
+                    color={"black"}
                     m={2}
                     onClick={() => {
                       setEventTitle(suggestion);
@@ -190,9 +199,10 @@ const MyCalendar = () => {
                 </Box>
 
                 <FormControl mt={4}>
+                  <FormLabel fontWeight={600} color={"black"}>来店時間</FormLabel>
                   <Input
+                  color={"black"}
                     type="time"
-                    placeholder="時間"
                     value={eventTime}
                     onChange={(e) => setEventTime(e.target.value)}
                   />
