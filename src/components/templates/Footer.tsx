@@ -19,15 +19,15 @@ export default function Footer() {
 
   return (
     <Box
-      bg={useColorModeValue("gray.50", "gray.900")}
-      color={useColorModeValue("gray.700", "gray.200")}
+      bg={"blackAlpha.900"}
+      color={"white"}
       position="fixed"
       bottom={0}
       w="100%"
       zIndex={100}
     >
       <Container maxW={"6xl"} py={2}>
-        <Flex justifyContent="center" columnGap={8}>
+        <Flex justifyContent="center" align={"center"} columnGap={8}>
           <Link href="/home">
             <Flex direction="column" alignItems="center">
               <AiOutlineHome size={25} />

@@ -56,12 +56,12 @@ function Home() {
       {user ? (
         <>
           <Header />
-          <Box pb={{ base: "88px" }}>
+          <Box mt={16}  pb={{ base: "88px" }}>
             <Flex align="center" justify="center" p={6}>
-              <Heading as="h2" fontSize={24}>
-                <StarIcon color="gray.300" p={1} />
+              <Heading as="h2" color={"white"} fontSize={20}>
+                <StarIcon  p={1} />
                 本日ご来店予定のお客様
-                <StarIcon color="gray.300" p={1} />
+                <StarIcon  p={1} />
               </Heading>
             </Flex>
             <Stack>
@@ -73,13 +73,16 @@ function Home() {
           <Footer />
         </>
       ) : (
+        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
+
         <Spinner
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
           color="blue.500"
           size="xl"
-        />
+          />
+          </Flex>
       )}
     </>
   );

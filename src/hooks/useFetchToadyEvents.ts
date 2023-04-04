@@ -32,7 +32,7 @@ export const useFetchTodayEvents = () => {
     if (user) {
       fetchTodayEvents();
     }
-  }, [user]);
+  }, [user,todayEvents]);
 
   return todayEvents;
 };

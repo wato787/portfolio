@@ -36,21 +36,25 @@ const Header = () => {
   };
 
   return (
-    <Box backgroundColor="blackAlpha.700" color="white">
+    <Box zIndex={999}  position={"fixed"} top={0} w="100%" backgroundColor="blackAlpha.900" color="white">
       <Container maxW="container.lg">
         <Flex
           as="header"
-          py="4"
+          py="3"
           justifyContent="space-between"
           alignItems="center"
         >
           <Link href="/home">
             <Box>
               <Heading
-                sx={{ fontFamily: "Libre Baskerville" }}
+                sx={{
+                  fontFamily: "Libre Baskerville",
+                }}
                 as="h1"
-                fontSize="4xl"
+                fontSize="3xl"
                 fontWeight={"normal"}
+                bgGradient="linear(to-b, #ffb6c1, #fff)"
+                bgClip="text"
               >
                 Envy
               </Heading>
@@ -58,7 +62,15 @@ const Header = () => {
           </Link>
           <Box>
             <Flex align="center" columnGap="20px" fontSize="1xl">
-              <IconButton aria-label="Logout" colorScheme='teal' icon={<MdLogout/>} onClick={onOpen}>ログアウト</IconButton>
+              <IconButton
+                aria-label="Logout"
+                colorScheme="black"
+                fontSize={24}
+                icon={<MdLogout />}
+                onClick={onOpen}
+              >
+                ログアウト
+              </IconButton>
 
               <AlertDialog
                 isOpen={isOpen}

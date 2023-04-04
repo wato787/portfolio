@@ -16,7 +16,11 @@ import {
   Box,
   Flex,
   Text,
+  Spinner,
+  IconButton,
+  Center,
 } from "@chakra-ui/react";
+import styles from "../../styles/InputTypeFile.module.scss"
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
 import { useRouter } from "next/router";
@@ -27,6 +31,8 @@ import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
+import { AddIcon } from "@chakra-ui/icons";
+import { BiAddToQueue } from "react-icons/bi";
 const Detail = () => {
   const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>("");
@@ -103,37 +109,44 @@ const Detail = () => {
 
   return (
     <>
-      {info && (
+      {info ? (
         <>
           <Header />
           {/* お客様情報 */}
-          <InfoAccordion info={info} />
+          <InfoAccordion  info={info} />
 
           {/* 写真追加 */}
-          <Flex align={"center"} justify={"center"} pb={6}>
-            <Button rightIcon={<MdOutlineAddPhotoAlternate />} onClick={onOpen}>
-              写真追加
-            </Button>
+          <Flex  align={"center"} justify={"center"} pb={6}>
+          
+       <IconButton  color={"blue.800"}  borderRadius={"50%"} zIndex={999} position={"fixed"} bottom={"88px"} right={10} aria-label="add" icon={<MdOutlineAddPhotoAlternate size={22} />} bg={"white"}  onClick={onOpen} variant='outline' colorScheme="blackAlpha" size="lg"/>
+
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
-                <ModalHeader>写真追加</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalHeader textAlign={"center"} color={"black"}>写真追加</ModalHeader>
+                <ModalCloseButton color={"black"} />
+                <ModalBody pb={2}>
                   <FormControl>
+
+                    <Center>
+            <label className={styles.add} htmlFor="addFaceFile"><BiAddToQueue  color="black" size={30}/>
                     <Input
                       type="file"
+                      id="addFaceFile"
                       multiple
                       accept="image/*"
+                      style={{display:"none"}}
                       onChange={handleNailFileChange}
-                    />
-                    <Text pt={2}>10個まで</Text>
+                      />
+                      </label>
+                      </Center>
+                    <Text color={"red.500"} pt={2}>※同時画像ファイルアップロード10個まで</Text>
                     {/* プレビュー表示 */}
                     {nailFiles.length > 0 && (
                       <Flex wrap={"wrap"}>
                         {nailFiles.map((file) => (
                           <Box key={file.name}>
-                            <Box mt={2} mb={4}>
+                            <Box my={1}>
                               <Image
                                 src={URL.createObjectURL(file)}
                                 alt="preview"
@@ -211,6 +224,17 @@ const Detail = () => {
           )}
           <Footer />
         </>
+      ) : (
+        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
+
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.400"
+          size="xl"
+          />
+          </Flex>
       )}
     </>
   );

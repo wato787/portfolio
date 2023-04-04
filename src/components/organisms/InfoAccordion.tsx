@@ -1,4 +1,4 @@
-import { UserInfo } from "@/types/AddInfoPage/type";
+import { UserInfo } from "@/types/type";
 import {
   Accordion,
   AccordionButton,
@@ -12,7 +12,7 @@ import AccordionItemPanel from "../atoms/AccordionItemPanel";
 const InfoAccordion = ({ info }: { info: UserInfo }) => {
     
   return (
-    <Accordion allowMultiple mb={4} m={2}>
+    <Accordion  allowMultiple mb={4} mx={2} mt={20}>
       <AccordionItem>
         <Heading as={"h2"}>
           <AccordionButton>

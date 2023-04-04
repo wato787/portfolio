@@ -3,7 +3,7 @@ import ListCard from "@/components/organisms/ListCard";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import { Flex, Spinner, Input, Button, Box } from "@chakra-ui/react";
-import AddInfoButton from "@/components/atoms/ListPage/AddInfoButton";
+import AddInfoButton from "@/components/atoms/AddInfoButton";
 import { auth } from "../../../firebase";
 import { useListData } from "@/hooks/useListData";
 import { UserInfo } from "@/types/type";
@@ -25,11 +25,11 @@ const List = () => {
       {user ? (
         <>
           <Header />
-          <Flex align="center" justify="center" mt="4">
-            <AddInfoButton text={"顧客情報追加"} />
-          </Flex>
-          <Flex align="center" justify="center" mt={4}>
+            <AddInfoButton  />
+          <Flex  align="center" justify="center" mt={20}>
             <Input
+            bg={"white"}
+            color={"black"}
               w={60}
               pr="4.5rem"
               type="text"
@@ -40,7 +40,7 @@ const List = () => {
           </Flex>
           <Box pb={"88px"}>
             <Flex
-              mt={4}
+              mt={2}
               wrap="wrap"
               align="center"
               justify="center"
@@ -66,13 +66,16 @@ const List = () => {
           <Footer />
         </>
       ) : (
+        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
+
         <Spinner
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
           color="blue.500"
           size="xl"
-        />
+          />
+          </Flex>
       )}
     </>
   );

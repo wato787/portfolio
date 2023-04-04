@@ -69,6 +69,7 @@ const MyCalendar = () => {
     fetchData();
   };
 
+  // 予定追加
   const handleAddEvent = async () => {
     if (eventTitle === "") return;
     if (calendarRef.current) {
@@ -144,7 +145,6 @@ const MyCalendar = () => {
           };
         });
 
-        console.log(data);
         setEvents(data);
       }
     );
@@ -160,7 +160,7 @@ const MyCalendar = () => {
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>予定追加</ModalHeader>
+              <ModalHeader color={"black"}>{eventDate}</ModalHeader>
               <ModalCloseButton />
               <ModalBody pb={6}>
                 <FormControl>
@@ -176,13 +176,13 @@ const MyCalendar = () => {
                 <Box mt={2}>
                   {suggestions.map((suggestion, index) => (
                     <Button
-                      key={index}
-                      size="sm"
-                      m={2}
-                      onClick={() => {
-                        setEventTitle(suggestion);
-                        setSuggestions([]);
-                      }}
+                    key={index}
+                    size="sm"
+                    m={2}
+                    onClick={() => {
+                      setEventTitle(suggestion);
+                      setSuggestions([]);
+                    }}
                     >
                       {suggestion}
                     </Button>
@@ -207,7 +207,7 @@ const MyCalendar = () => {
             </ModalContent>
           </Modal>
 
-          <Box fontSize={12} mt={4} pb={{ base: "72px" }}>
+          <Box fontSize={12} mt={20} pb={{ base: "72px" }}>
             <FullCalendar
               height="500px"
               ref={calendarRef}
@@ -237,13 +237,16 @@ const MyCalendar = () => {
           <Footer />
         </>
       ) : (
+        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
+
         <Spinner
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
           color="blue.500"
           size="xl"
-        />
+          />
+          </Flex>
       )}
     </>
   );
