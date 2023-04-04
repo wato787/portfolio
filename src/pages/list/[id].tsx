@@ -31,9 +31,8 @@ import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
-import { AddIcon } from "@chakra-ui/icons";
 import { BiAddToQueue } from "react-icons/bi";
-const Detail = () => {
+const Detail= () => {
   const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>("");
   const [nailFiles, setNailFiles] = useState<File[]>([]);

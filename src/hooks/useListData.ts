@@ -3,7 +3,7 @@ import { collection, doc, getDocs, query, where, CollectionReference, QuerySnaps
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { User } from "firebase/auth";
-import { UserInfo } from "@/types/AddInfoPage/type";
+import { UserInfo } from "@/types/type";
 
 
 
