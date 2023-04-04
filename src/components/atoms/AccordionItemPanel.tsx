@@ -1,4 +1,4 @@
-import { EditIcon } from "@chakra-ui/icons";
+import { CheckIcon, EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import {
   AccordionPanel,
   Button,
@@ -46,23 +46,19 @@ const AccordionItemPanel = ({
     setText(newValue);
   };
 
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setNewValue(value);
-  };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNewValue(event.target.value);
   };
 
   return (
-    <AccordionPanel pb={2}>
+    <AccordionPanel fontSize={"sm"} pb={2}>
       <Flex justifyContent="space-between" alignItems="center">
         {isEditing ? (
           <>
             <Input type="text" value={newValue} onChange={handleInputChange} />
-            <Button onClick={handleSaveClick}>保存</Button>
-            <Button onClick={handleCancelClick}>キャンセル</Button>
+            <IconButton ml={1} size={"sm"} bg="white" color="blue"  aria-label="保存" icon={<CheckIcon/>} onClick={handleSaveClick}/>
+
           </>
         ) : (
           <>
@@ -72,6 +68,8 @@ const AccordionItemPanel = ({
             </Text>
             <IconButton
               onClick={handleEditClick}
+              bg="#111111"
+              color={"white"}
               size={"sm"}
               aria-label="Edit"
               icon={<EditIcon />}
