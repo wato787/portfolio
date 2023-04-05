@@ -36,7 +36,14 @@ const Header = () => {
   };
 
   return (
-    <Box zIndex={999}  position={"fixed"} top={0} w="100%" backgroundColor="blackAlpha.900" color="white">
+    <Box
+      zIndex={999}
+      position={"fixed"}
+      top={0}
+      w="100%"
+      backgroundColor="blackAlpha.900"
+      color="white"
+    >
       <Container maxW="container.lg">
         <Flex
           as="header"
@@ -68,9 +75,7 @@ const Header = () => {
                 fontSize={24}
                 icon={<MdLogout />}
                 onClick={onOpen}
-              >
-                ログアウト
-              </IconButton>
+              />
 
               <AlertDialog
                 isOpen={isOpen}
@@ -78,15 +83,15 @@ const Header = () => {
                 onClose={onClose}
               >
                 <AlertDialogOverlay>
-                  <AlertDialogContent>
-                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  <AlertDialogContent mx={6} textAlign={"center"}>
+                    <AlertDialogHeader color={"black"} fontSize="lg" fontWeight="bold">
                       ログアウト
                     </AlertDialogHeader>
 
-                    <AlertDialogBody>ログアウトしますか？</AlertDialogBody>
+                    <AlertDialogBody color={"black"}>ログアウトしますか？</AlertDialogBody>
 
                     <AlertDialogFooter>
-                      <Button ref={cancelRef} onClick={onClose}>
+                      <Button bg={"#111111"}  ref={cancelRef} onClick={onClose}>
                         いいえ
                       </Button>
                       <Button colorScheme="red" onClick={handleSignOut} ml={3}>
