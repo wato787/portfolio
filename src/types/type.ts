@@ -23,6 +23,7 @@ export type TodayUserInfo = UserInfo & {
 };
 
 export type TodayEventData= {
+  visited:boolean
   id: string;
   title: string;
   start: {

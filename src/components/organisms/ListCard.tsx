@@ -28,7 +28,7 @@ export default function ListCard({ data }: { data: UserInfo }) {
         direction={{ base: "column", md: "row" }}
         bg={bgColor}
         boxShadow={"2xl"}
-        padding={4}
+        padding={2}
       >
         <Flex align="center" justify="center" flex={1}>
           <Avatar
@@ -62,7 +62,7 @@ export default function ListCard({ data }: { data: UserInfo }) {
             width={"100%"}
             direction={"row"}
             padding={1}
-            justifyContent={"space-between"}
+            justifyContent={"center"}
             alignItems={"center"}
           >
             <DetailBtn data={data}/>

@@ -60,10 +60,10 @@ const Header = () => {
                 as="h1"
                 fontSize="3xl"
                 fontWeight={"normal"}
-                bgGradient="linear(to-b, #ffb6c1, #fff)"
+                bgGradient="linear(to-b, #007fff, #fff)"
                 bgClip="text"
               >
-                Envy
+                Ohung
               </Heading>
             </Box>
           </Link>

@@ -20,7 +20,7 @@ import {
   IconButton,
   Center,
 } from "@chakra-ui/react";
-import styles from "../../styles/InputTypeFile.module.scss"
+import styles from "../../styles/InputTypeFile.module.scss";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
 import { useRouter } from "next/router";
@@ -32,7 +32,7 @@ import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
 import { BiAddToQueue } from "react-icons/bi";
-const Detail= () => {
+const Detail = () => {
   const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>("");
   const [nailFiles, setNailFiles] = useState<File[]>([]);
@@ -95,6 +95,12 @@ const Detail= () => {
     onClose();
   };
 
+  const cancelAddPhoto = () => {
+    setNailFiles([]);
+
+    onClose();
+  };
+
   useEffect(() => {
     if (info && info.nailPhotos) {
       setNailPhotoList(info.nailPhotos);
@@ -112,37 +118,60 @@ const Detail= () => {
         <>
           <Header />
           {/* お客様情報 */}
-          <InfoAccordion  info={info} />
+          <InfoAccordion info={info} />
 
           {/* 写真追加 */}
-          <Flex  align={"center"} justify={"center"} pb={6}>
-          
-       <IconButton  color={"blue.800"}  borderRadius={"50%"} zIndex={999} position={"fixed"} bottom={"88px"} right={10} aria-label="add" icon={<MdOutlineAddPhotoAlternate size={22} />} bg={"white"}  onClick={onOpen} variant='outline' colorScheme="blackAlpha" size="lg"/>
+          <Flex align={"center"} justify={"center"} pb={6}>
+            <IconButton
+              color={"blue.800"}
+              borderRadius={"50%"}
+              zIndex={999}
+              position={"fixed"}
+              bottom={"88px"}
+              right={10}
+              aria-label="add"
+              icon={<MdOutlineAddPhotoAlternate size={22} />}
+              bg={"white"}
+              onClick={onOpen}
+              variant="outline"
+              colorScheme="blackAlpha"
+              size="lg"
+            />
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={cancelAddPhoto}>
               <ModalOverlay />
-              <ModalContent>
-                <ModalHeader textAlign={"center"} color={"black"}>写真追加</ModalHeader>
+              <ModalContent mx={6}>
+                <ModalHeader textAlign={"center"} color={"black"}>
+                  写真追加
+                </ModalHeader>
                 <ModalCloseButton color={"black"} />
                 <ModalBody pb={2}>
                   <FormControl>
-
                     <Center>
-            <label className={styles.add} htmlFor="addFaceFile"><BiAddToQueue  color="black" size={30}/>
-                    <Input
-                      type="file"
-                      id="addFaceFile"
-                      multiple
-                      accept="image/*"
-                      style={{display:"none"}}
-                      onChange={handleNailFileChange}
-                      />
+                      <label className={styles.add} htmlFor="addFaceFile">
+                        <BiAddToQueue color="black" size={30} />
+                        <Input
+                          type="file"
+                          id="addFaceFile"
+                          multiple
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          onChange={handleNailFileChange}
+                        />
                       </label>
-                      </Center>
-                    <Text color={"red.500"} pt={2}>※同時画像ファイルアップロード10個まで</Text>
+                    </Center>
+                    <Text fontSize={"sm"} color={"red.500"} pt={2}>
+                      ※同時画像ファイルアップロード10個まで
+                    </Text>
                     {/* プレビュー表示 */}
+
                     {nailFiles.length > 0 && (
-                      <Flex wrap={"wrap"}>
+                      <Flex
+                        alignItems={"center"}
+                        justify={"center"}
+                        gap="4"
+                        wrap={"wrap"}
+                      >
                         {nailFiles.map((file) => (
                           <Box key={file.name}>
                             <Box my={1}>
@@ -163,7 +192,8 @@ const Detail= () => {
 
                 <ModalFooter>
                   <Button
-                    colorScheme="blue"
+                    bg={"black"}
+                    color="white"
                     mr={3}
                     onClick={() => AddNailPhotos(info.id)}
                   >
@@ -198,7 +228,7 @@ const Detail= () => {
               </Flex>
             )}
           </Box>
-
+          {/* 拡大表示 */}
           {isImageOpen && (
             <Box
               position="fixed"
@@ -211,29 +241,29 @@ const Detail= () => {
               display="flex"
               alignItems="center"
               justifyContent="center"
+              zIndex={"999"}
             >
               <Image
                 src={selectedImage as string}
                 alt="selected image"
-                width={300}
-                height={250}
-                layout="intrinsic"
+                width={320}
+                height={300}
+                layout="responsive"
               />
             </Box>
           )}
           <Footer />
         </>
       ) : (
-        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
-
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.400"
-          size="xl"
+        <Flex justifyContent={"center"} alignItems={"center"} height="100vh">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.400"
+            size="xl"
           />
-          </Flex>
+        </Flex>
       )}
     </>
   );

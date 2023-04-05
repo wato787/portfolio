@@ -103,7 +103,6 @@ export default function Login() {
 
   return (
     <>
-      
       <Flex
         minH={"100vh"}
         align={"center"}
@@ -118,17 +117,17 @@ export default function Login() {
                 fontFamily: "Libre Baskerville",
               }}
               as="h1"
-              fontSize="4xl"
+              fontSize="5xl"
               fontWeight={"normal"}
-              bgGradient="linear(to-b, #ffb6c1, #fff)"
+              bgGradient="linear(to-b, #007fff, #fff)"
               bgClip="text"
             >
-              Envy
+              Ohung
             </Heading>
             {/* クリエイト */}
             <Text
               _hover={{ cursor: "pointer", color: "blue.600" }}
-              color={"blue.400"}
+              color={"blue.300"}
               _focus={{ boxShadow: "outline" }}
               _active={{ color: "blue.800" }}
               onClick={onCreateModalOpen}
@@ -138,7 +137,7 @@ export default function Login() {
 
             <Modal isOpen={isCreateModalOpen} onClose={onCreateModalClose}>
               <ModalOverlay />
-              <ModalContent>
+              <ModalContent mx={6}>
                 <ModalHeader textAlign={"center"} color={"black"}>
                   アカウント新規作成
                 </ModalHeader>
@@ -169,12 +168,10 @@ export default function Login() {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button onClick={handleSignUp} colorScheme="blue" mr={3}>
+                  <Button onClick={handleSignUp} bg="black" color={"white"} mr={3}>
                     作成
                   </Button>
-                  <Button bg={"blue.300"} onClick={onCreateModalClose}>
-                    戻る
-                  </Button>
+                
                 </ModalFooter>
               </ModalContent>
             </Modal>
@@ -228,7 +225,11 @@ export default function Login() {
                       onClose={onResetModalClose}
                     >
                       <ModalOverlay />
-                      <ModalContent alignItems="center" justifyContent="center">
+                      <ModalContent
+                        mx={6}
+                        alignItems="center"
+                        justifyContent="center"
+                      >
                         <ModalHeader textAlign={"center"} color={"black"}>
                           リセットURLの送信先
                         </ModalHeader>
@@ -239,6 +240,7 @@ export default function Login() {
                               メールアドレス
                             </FormLabel>
                             <Input
+                              w={"300px"}
                               color={"black"}
                               id="email"
                               type="email"
@@ -252,27 +254,22 @@ export default function Login() {
                           <Button
                             mr={3}
                             onClick={handleResetPassword}
-                            colorScheme="blue"
+                            bg="black"
+                            color={"white"}
                           >
                             メール送信
                           </Button>
-                          <Button
-                            bg="blue.400"
-                            onClick={onResetModalClose}
-                            colorScheme="blue"
-                          >
-                            戻る
-                          </Button>
+                         
                         </ModalFooter>
                       </ModalContent>
                     </Modal>
                   </Stack>
                   <Button
                     onClick={handleLogin}
-                    bg={"blue.400"}
+                    bg={"black"}
                     color={"white"}
                     _hover={{
-                      bg: "blue.500",
+                      bg: "blue.900",
                     }}
                   >
                     ログイン

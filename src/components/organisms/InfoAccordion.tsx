@@ -15,7 +15,7 @@ const InfoAccordion = ({ info }: { info: UserInfo }) => {
     <Accordion  allowMultiple mb={4} mx={2} mt={20}>
       <AccordionItem>
         <Heading as={"h2"}>
-          <AccordionButton>
+          <AccordionButton _expanded={{bg:"gray.600"}}>
             <Box as="span" flex="1" textAlign="left">
               お客様情報
             </Box>
@@ -25,8 +25,8 @@ const InfoAccordion = ({ info }: { info: UserInfo }) => {
         <AccordionItemPanel beforeValue={"名前:"} value={info.name} infoId={info.id} fieldName="name"/>
         <AccordionItemPanel beforeValue={"ニックネーム:"} value={info.nickname} infoId={info.id} fieldName="nickname"/>
         <AccordionItemPanel beforeValue={"趣味:"} value={info.hobby} infoId={info.id} fieldName="hobby"/>
-        <AccordionItemPanel beforeValue={"メモ:"} value={info.memo} infoId={info.id} fieldName="name"/>
-        <AccordionItemPanel beforeValue={"話し方:"} value={info.language} infoId={info.id} fieldName="memo"/>
+        <AccordionItemPanel beforeValue={"メモ:"} value={info.memo} infoId={info.id} fieldName="memo"/>
+        <AccordionItemPanel beforeValue={"話し方:"} value={info.language} infoId={info.id} fieldName="language"/>
         <AccordionItemPanel beforeValue={"爪の厚さ:"} value={info.nailThickness} infoId={info.id} fieldName="nailThickness"/>
         <AccordionItemPanel beforeValue={"浮きやすい部分:"} value={info.floatingPart} infoId={info.id} fieldName="floatingPart"/>
         <AccordionItemPanel beforeValue={"油分:"} value={info.oiliness} infoId={info.id} fieldName="oiliness"/>

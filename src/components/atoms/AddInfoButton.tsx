@@ -1,5 +1,5 @@
-import { AddIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Button, IconButton } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
+import { IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 const AddInfoButton = () => {

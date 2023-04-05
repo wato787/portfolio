@@ -26,11 +26,14 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
     };
     await updateDoc(infoDocRef, updateData);
     setVisit(updateData.visits);
-    // 来店済みのイベント削除
+    // 来店済みの情報更新
     const eventDocRef = doc(db, "users", user!.uid, "events", data.eventId);
     if (eventId === data.eventId) {
-      await deleteDoc(eventDocRef);
+      await updateDoc(eventDocRef, {
+        visited: true
+      });
     }
+    
   };
 
   // 来店回数に応じて色変更

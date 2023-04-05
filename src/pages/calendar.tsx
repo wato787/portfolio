@@ -90,6 +90,7 @@ const MyCalendar = () => {
           {
             ...event,
             createdAt: serverTimestamp(),
+            visited:false,
           }
         );
         await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
@@ -165,8 +166,15 @@ const MyCalendar = () => {
           <Header />
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent>
-              <ModalHeader color={"black"}>{eventDate}</ModalHeader>
+            <ModalContent mx={4}>
+            <ModalHeader color={"black"}>
+  {new Date(eventDate).toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  })}
+</ModalHeader>
+
               <ModalCloseButton color={"black"}/>
               <ModalBody pb={6}>
                 <FormControl>
@@ -181,12 +189,13 @@ const MyCalendar = () => {
                 </FormControl>
 
                 {/* 候補リスト */}
-                <Box mt={2}>
+                <Box  mt={2}>
                   {suggestions.map((suggestion, index) => (
                     <Button
                     key={index}
                     size="sm"
-                    color={"black"}
+                    bg={"black"}
+                    color={"white"}
                     m={2}
                     onClick={() => {
                       setEventTitle(suggestion);
@@ -210,7 +219,7 @@ const MyCalendar = () => {
               </ModalBody>
 
               <ModalFooter>
-                <Button colorScheme="blue" mr={3} onClick={handleAddEvent}>
+                <Button bg={"black"} color="white" mr={3} onClick={handleAddEvent}>
                   追加
                 </Button>
               </ModalFooter>
