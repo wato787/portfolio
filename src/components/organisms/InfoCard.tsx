@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
   Box,
+  Button,
 } from "@chakra-ui/react";
 import { auth, db } from "../../../firebase";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -26,14 +27,22 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
     };
     await updateDoc(infoDocRef, updateData);
     setVisit(updateData.visits);
-    // 来店済みの情報更新
+
+    // ホーム画面から表示されなくする
     const eventDocRef = doc(db, "users", user!.uid, "events", data.eventId);
     if (eventId === data.eventId) {
       await updateDoc(eventDocRef, {
-        visited: true
+        visited: true,
       });
     }
-    
+  };
+
+  const cancelVisit = async (eventId: string) => {
+    // ホーム画面から表示されなくする
+    const eventDocRef = doc(db, "users", user!.uid, "events", data.eventId);
+    if (eventId === data.eventId) {
+      await deleteDoc(eventDocRef);
+    }
   };
 
   // 来店回数に応じて色変更
@@ -52,6 +61,17 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
       <StartLine start={data.start} />
 
       <Center py={4} position="relative">
+        <Button
+          onClick={() => cancelVisit(data.eventId)}
+          size={"xs"}
+          bg="#fff"
+          color={"#000"}
+          top={6}
+          left={"12%"}
+          position={"absolute"}
+        >
+          キャンセル
+        </Button>
         <Stack
           borderWidth="1px"
           borderRadius="lg"

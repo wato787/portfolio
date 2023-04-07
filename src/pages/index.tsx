@@ -168,10 +168,14 @@ export default function Login() {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button onClick={handleSignUp} bg="black" color={"white"} mr={3}>
+                  <Button
+                    onClick={handleSignUp}
+                    bg="black"
+                    color={"white"}
+                    mr={3}
+                  >
                     作成
                   </Button>
-                
                 </ModalFooter>
               </ModalContent>
             </Modal>
@@ -259,7 +263,6 @@ export default function Login() {
                           >
                             メール送信
                           </Button>
-                         
                         </ModalFooter>
                       </ModalContent>
                     </Modal>
