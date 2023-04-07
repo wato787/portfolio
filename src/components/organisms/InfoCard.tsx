@@ -38,7 +38,7 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
   };
 
   const cancelVisit = async (eventId: string) => {
-    // ホーム画面から表示されなくする
+    // イベント削除
     const eventDocRef = doc(db, "users", user!.uid, "events", data.eventId);
     if (eventId === data.eventId) {
       await deleteDoc(eventDocRef);
