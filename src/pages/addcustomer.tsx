@@ -272,27 +272,8 @@ const AddCustomer = () => {
                 </HStack>
 
                 <FormLabel mt={4}>爪の写真</FormLabel>
-                <label className={styles.add} htmlFor="nailFile">
-                  <BiAddToQueue color="black" size={30} />
-                  <Input
-                    className={styles.file}
-                    bg={"white"}
-                    color="black"
-                    type="file"
-                    multiple
-                    id="nailFile"
-                    w={{ base: "300px" }}
-                    placeholder="爪の写真をアップロードしてください"
-                    mb={4}
-                    onChange={handleNailFileChange}
-                  />
-                </label>
-
-                <Text mt={1} fontSize={"sm"} color={"red.500"}>
-                  ※画像ファイルアップ同時に１０個まで
-                </Text>
-
-                {nailFiles.length > 0 && (
+               {/* プレビュー表示 */}
+                {nailFiles.length > 0 ? (
                   <Flex
                     alignItems={"center"}
                     gap={1}
@@ -312,9 +293,40 @@ const AddCustomer = () => {
                       </Box>
                     ))}
                   </Flex>
+                ):(
+                  // 選択したらボタン非表示
+                  <label className={styles.add} htmlFor="nailFile">
+                  <BiAddToQueue color="black" size={30} />
+                  <Input
+                    className={styles.file}
+                    bg={"white"}
+                    color="black"
+                    type="file"
+                    multiple
+                    id="nailFile"
+                    w={{ base: "300px" }}
+                    placeholder="爪の写真をアップロードしてください"
+                    mb={4}
+                    onChange={handleNailFileChange}
+                  />
+                </label>
                 )}
 
                 <FormLabel mt={2}>顔写真</FormLabel>
+                {/* プレビュー表示 */}
+                {faceFile ? (
+                  <Box>
+                    <Box mt={6} mb={4}>
+                      <Image
+                        src={URL.createObjectURL(faceFile)}
+                        alt="preview"
+                        width={150}
+                        height={150}
+                      />
+                    </Box>
+                  </Box>
+                ):(
+                  // 選択したら非表示
                 <label className={styles.add} htmlFor="faceFile">
                   <BiAddToQueue color="black" size={30} />
 
@@ -330,17 +342,7 @@ const AddCustomer = () => {
                     onChange={handleFaceFileChange}
                   />
                 </label>
-                {faceFile && (
-                  <Box>
-                    <Box mt={6} mb={4}>
-                      <Image
-                        src={URL.createObjectURL(faceFile)}
-                        alt="preview"
-                        width={150}
-                        height={150}
-                      />
-                    </Box>
-                  </Box>
+
                 )}
 
                 <Button
