@@ -33,6 +33,10 @@ import {
 import { createEmailState, createPasswordState } from "../Recoil/atom";
 import { doc, setDoc } from "firebase/firestore";
 
+// このページのロジック部分もhooksに切り分けてもいいかもしれないですね、
+// ロジックの部分が長く感じますね
+// あとは初期セットアップ時に作成されているが使用していないファイル（pages/api/）とかも消しましょう！
+
 // ログインページ
 export default function Login() {
   const router = useRouter();
@@ -71,7 +75,9 @@ export default function Login() {
     }
   };
 
+  // ↓eいらないのでは？？
   const handleSignUp = async (e: MouseEvent<HTMLButtonElement>) => {
+    // ↓eいらなければこれもいらないですかね。
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, createEmail, createPassword);
@@ -176,6 +182,7 @@ export default function Login() {
                   >
                     作成
                   </Button>
+
                 </ModalFooter>
               </ModalContent>
             </Modal>
@@ -263,6 +270,7 @@ export default function Login() {
                           >
                             メール送信
                           </Button>
+
                         </ModalFooter>
                       </ModalContent>
                     </Modal>

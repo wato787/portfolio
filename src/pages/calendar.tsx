@@ -55,7 +55,7 @@ const MyCalendar = () => {
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEventTitle(value);
-  
+
     // Firestoreから候補を検索してstateに保存する
     const fetchData = async () => {
       if (value !== "") { // 入力値が空文字列でない場合にのみクエリを実行する
@@ -73,7 +73,7 @@ const MyCalendar = () => {
     };
     fetchData();
   };
-  
+
 
   // 予定追加
   const handleAddEvent = async () => {
@@ -94,7 +94,7 @@ const MyCalendar = () => {
           }
         );
         await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
-  
+
         // カレンダーにイベントが追加されていない場合にのみ追加する
         const calendarApi = calendarRef.current.getApi();
         if (!calendarApi.getEventById(docRef.id)) {
@@ -111,7 +111,7 @@ const MyCalendar = () => {
     setEventTime("");
     onClose();
   };
-  
+
 
   const handleDateClick = (arg: DateClickArg) => {
     setEventDate(arg.dateStr); // クリックした日付を設定する

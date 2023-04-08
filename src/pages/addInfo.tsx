@@ -28,6 +28,8 @@ import { IconButton } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import styles from "../styles/InputTypeFile.module.scss";
 
+
+// ページ名AddInfoなのも少し違和感ですね、登録ページだと思うのでAddCustomerとか？
 const AddInfo = () => {
   const [visits, setVisits] = useState(0);
   const router = useRouter();

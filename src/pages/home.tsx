@@ -13,7 +13,10 @@ import { matchedDataState } from "../Recoil/atom";
 import { useFetchTodayEvents } from "../hooks/useFetchToadyEvents";
 
 function Home() {
+
+  // ページ全体にロジックが多く記述されているのでなるべくリターン以外のコードは別に切り分けできるとなおよいです！(index.tsxと同じ意味)
   const listData: UserInfo[] = useListData();
+  // ↓変数名がわかりにくいかもですね、何が入る変数なのか第三者でもわかる変数名にしましょう！
   const [matchedData, setMatchedData] = useRecoilState(matchedDataState);
   const user = auth.currentUser;
   // 今日のイベントを取得
@@ -25,6 +28,7 @@ function Home() {
       (event) => event.title === data.name && (!event.visited || event.visited !== true)
     )
   );
+  // ↓これも同じく変数名修正できたらなおよしです👍
   const matchedWithData = matched.map((data: UserInfo) => {
     const todayEventData = todayEvents.find(
       (event) => event.title === data.name && (!event.visited || event.visited !== true)
