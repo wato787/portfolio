@@ -60,19 +60,9 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
     <>
       <StartLine start={data.start} />
 
-      <Center py={4} position="relative">
-        <Button
-          onClick={() => cancelVisit(data.eventId)}
-          size={"xs"}
-          bg="#fff"
-          color={"#000"}
-          top={6}
-          left={"12%"}
-          position={"absolute"}
-        >
-          キャンセル
-        </Button>
+      <Center py={4}>
         <Stack
+         position="relative"
           borderWidth="1px"
           borderRadius="lg"
           w={{ base: "300px", sm: "100%", md: "540px" }}
@@ -82,6 +72,17 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
           padding={2}
           bg={bgColor}
         >
+        <Button
+          onClick={() => cancelVisit(data.eventId)}
+          size={"xs"}
+          bg="#fff"
+          color={"#000"}
+          top={2}
+          left={2}
+          position={"absolute"}
+        >
+          キャンセル
+        </Button>
           <Flex align="center" justify="center" flex={1}>
             <Avatar size="2xl" src={data.facePhotos[0]?data.facePhotos[0]:"https://bit.ly/broken-link"} />
           </Flex>
