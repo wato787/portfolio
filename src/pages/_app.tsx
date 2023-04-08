@@ -19,11 +19,6 @@ export default function App({ Component, pageProps }: AppProps) {
             />
 
             <title>Ohung</title>
-            <link
-              rel="apple-touch-icon"
-              sizes="180x180"
-              href="../../public/icon.jpeg"
-            />
           </Head>
           <Component {...pageProps} />
         </RecoilRoot>
