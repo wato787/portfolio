@@ -235,7 +235,7 @@ const MyCalendar = () => {
             </ModalContent>
           </Modal>
 
-          <Box fontSize={12} mt={20} pb={{ base: "72px" }}>
+          <Box fontSize={12} mt={20} mx={2} pb={{ base: "72px" }}>
             <FullCalendar
               height="500px"
               ref={calendarRef}
