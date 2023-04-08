@@ -31,10 +31,13 @@ const StartLine = ({ start }: { start: string }) => {
     >
       <span
         style={{
+          fontFamily:"Libre Baskerville",
+          fontWeight:"bold",
           position: "relative",
           zIndex: 1,
           background: "#111111",
-          padding: "8px",
+          paddingLeft: "18px",
+          paddingRight: "18px",
         }}
       >
         {start}

@@ -34,6 +34,7 @@ import Image from "next/image";
 import { BiAddToQueue } from "react-icons/bi";
 const Detail = () => {
   const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>("");
   const [nailFiles, setNailFiles] = useState<File[]>([]);
   const [nailPhotoList, setNailPhotoList] = useState<string[]>([]);
@@ -70,6 +71,7 @@ const Detail = () => {
 
   //  nailphoto追加
   const AddNailPhotos = async (infoId: string) => {
+    setIsLoading(true);
     const nailPhotosRefs: string[] = [];
 
     for (const nailFile of nailFiles) {
@@ -93,6 +95,7 @@ const Detail = () => {
     setNailPhotoList(updatedNailPhotoList);
     setNailFiles([]);
     onClose();
+    setIsLoading(false);
   };
 
   const cancelAddPhoto = () => {
@@ -139,6 +142,28 @@ const Detail = () => {
             />
 
             <Modal isOpen={isOpen} onClose={cancelAddPhoto}>
+              {/* スピナー */}
+              {isLoading && (
+                <Flex
+                  align={"center"}
+                  justify={"center"}
+                  h={"100%"}
+                  position={"fixed"}
+                  top={0}
+                  left={0}
+                  zIndex={9999}
+                  bg={"rgba(0, 0, 0, 0.5)"}
+                  w={"100%"}
+                >
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.400"
+                    size="xl"
+                  />
+                </Flex>
+              )}
               <ModalOverlay />
               <ModalContent mx={6}>
                 <ModalHeader textAlign={"center"} color={"black"}>

@@ -83,7 +83,7 @@ export default function InfoCard({ data }: { data: TodayUserInfo }) {
           bg={bgColor}
         >
           <Flex align="center" justify="center" flex={1}>
-            <Avatar size="2xl" name="Segun Adebayo" src={data.facePhotos[0]} />
+            <Avatar size="2xl" src={data.facePhotos[0]?data.facePhotos[0]:"https://bit.ly/broken-link"} />
           </Flex>
           <Stack
             flex={1}

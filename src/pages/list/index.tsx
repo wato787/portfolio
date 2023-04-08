@@ -3,10 +3,10 @@ import ListCard from "@/components/organisms/ListCard";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import { Flex, Spinner, Input, Button, Box } from "@chakra-ui/react";
-import AddInfoButton from "@/components/atoms/AddInfoButton";
 import { auth } from "../../../firebase";
 import { useListData } from "@/hooks/useListData";
 import { UserInfo } from "@/types/type";
+import AddCustomerButton from "@/components/atoms/AddCustomerButton";
 
 const List = () => {
   const user = auth.currentUser;
@@ -25,7 +25,7 @@ const List = () => {
       {user ? (
         <>
           <Header />
-            <AddInfoButton  />
+            <AddCustomerButton  />
           <Flex  align="center" justify="center" mt={20}>
             <Input
             bg={"white"}

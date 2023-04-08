@@ -3,7 +3,7 @@ body {
   padding: 0;
 }
 .fc .fc-daygrid-day-bg .fc-non-business {
-  background-color: rgb(23, 15, 15) ;
+  background-color: rgba(23, 15, 15,0.5) ;
 
 }
 .fc .fc-day-sun a[data-navlink]{
@@ -19,7 +19,7 @@ body {
 }
 
 .fc-event {
-  background: rgb(59, 59, 59);
+  background: rgb(47, 45, 59);
   color: #fff;
 }
 .fc .fc-button-group > .fc-button {
@@ -35,7 +35,7 @@ body {
 }
 
 .fc .fc-daygrid-day.fc-day-today {
-  background: rgb(92, 91, 91);
+  background: rgb(92, 91, 91) ;
 }
 
 .fc .fc-daygrid-day-frame {

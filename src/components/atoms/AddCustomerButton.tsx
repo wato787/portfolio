@@ -2,7 +2,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const AddInfoButton = () => {
+const AddCustomerButton = () => {
   const router = useRouter();
   return (
     <>
@@ -16,7 +16,7 @@ const AddInfoButton = () => {
         aria-label="add"
         icon={<AddIcon />}
         bg={"white"}
-        onClick={() => router.push("/addInfo")}
+        onClick={() => router.push("/addcustomer")}
         variant="outline"
         colorScheme="blackAlpha"
         size="md"
@@ -25,4 +25,4 @@ const AddInfoButton = () => {
   );
 };
 
-export default AddInfoButton;
+export default AddCustomerButton;

@@ -16,7 +16,6 @@ import {
   Textarea,
   Text,
   Spinner,
-  Center,
 } from "@chakra-ui/react";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
@@ -29,14 +28,15 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import styles from "../styles/InputTypeFile.module.scss";
 
 
-// ページ名AddInfoなのも少し違和感ですね、登録ページだと思うのでAddCustomerとか？
-const AddInfo = () => {
+
+const AddCustomer = () => {
   const [visits, setVisits] = useState(0);
   const router = useRouter();
   const [nailFiles, setNailFiles] = useState<File[]>([]);
   const [faceFile, setFaceFile] = useState<File | null>(null);
   const { register, handleSubmit } = useForm<FormInputs>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  
 
   const user = auth.currentUser;
 
@@ -249,13 +249,15 @@ const AddInfo = () => {
                     onClick={() => setVisits(visits + 1)}
                     aria-label="add"
                     icon={<AddIcon />}
+                 
                   />
                   <Input
                     bg={"white"}
                     color="black"
                     value={visits}
                     type="number"
-                    w={{ base: "50px" }}
+                    w={{ base: "60px" }}
+                    textAlign="center"
                     mb={4}
                     {...register("visits")}
                   />
@@ -265,6 +267,7 @@ const AddInfo = () => {
                     onClick={() => visits > 0 && setVisits(visits - 1)}
                     aria-label="minus"
                     icon={<MinusIcon />}
+                 
                   />
                 </HStack>
 
@@ -371,4 +374,4 @@ const AddInfo = () => {
   );
 };
 
-export default AddInfo;
+export default AddCustomer;

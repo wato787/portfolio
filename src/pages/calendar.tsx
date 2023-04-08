@@ -37,7 +37,7 @@ import {
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import { FormLabel } from '@chakra-ui/react';
+import { FormLabel } from "@chakra-ui/react";
 
 const MyCalendar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,7 +58,8 @@ const MyCalendar = () => {
 
     // Firestoreから候補を検索してstateに保存する
     const fetchData = async () => {
-      if (value !== "") { // 入力値が空文字列でない場合にのみクエリを実行する
+      if (value !== "") {
+        // 入力値が空文字列でない場合にのみクエリを実行する
         const q = query(
           collection(db, "users", user!.uid, "info"),
           where("name", ">=", value),
@@ -73,7 +74,6 @@ const MyCalendar = () => {
     };
     fetchData();
   };
-
 
   // 予定追加
   const handleAddEvent = async () => {
@@ -90,7 +90,7 @@ const MyCalendar = () => {
           {
             ...event,
             createdAt: serverTimestamp(),
-            visited:false,
+            visited: false,
           }
         );
         await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
@@ -112,7 +112,6 @@ const MyCalendar = () => {
     onClose();
   };
 
-
   const handleDateClick = (arg: DateClickArg) => {
     setEventDate(arg.dateStr); // クリックした日付を設定する
     onOpen();
@@ -126,7 +125,7 @@ const MyCalendar = () => {
       calendarApi.changeView("dayGridDay");
     }
   };
-// urlで表示変更
+  // urlで表示変更
   useEffect(() => {
     if (router.query.view === "listWeek") {
       setView("listWeek");
@@ -167,19 +166,22 @@ const MyCalendar = () => {
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent mx={4}>
-            <ModalHeader color={"black"}>
-  {new Date(eventDate).toLocaleDateString("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  })}
-</ModalHeader>
+              <ModalHeader color={"black"}>
+                {new Date(eventDate).toLocaleDateString("ja-JP", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </ModalHeader>
 
-              <ModalCloseButton color={"black"}/>
+              <ModalCloseButton color={"black"} />
               <ModalBody pb={6}>
                 <FormControl>
-                  <Text mb={1} fontSize={"sm"} color={"black"}>※顧客リストと同じ名前を入力してください</Text>
+                  <Text mb={1} fontSize={"sm"} color={"black"}>
+                    ※顧客リストと同じ名前を入力してください
+                  </Text>
                   <Input
+                  autoFocus
                     type="text"
                     color={"black"}
                     placeholder="名前"
@@ -189,18 +191,18 @@ const MyCalendar = () => {
                 </FormControl>
 
                 {/* 候補リスト */}
-                <Box  mt={2}>
+                <Box mt={2}>
                   {suggestions.map((suggestion, index) => (
                     <Button
-                    key={index}
-                    size="sm"
-                    bg={"black"}
-                    color={"white"}
-                    m={2}
-                    onClick={() => {
-                      setEventTitle(suggestion);
-                      setSuggestions([]);
-                    }}
+                      key={index}
+                      size="sm"
+                      bg={"black"}
+                      color={"white"}
+                      m={2}
+                      onClick={() => {
+                        setEventTitle(suggestion);
+                        setSuggestions([]);
+                      }}
                     >
                       {suggestion}
                     </Button>
@@ -208,9 +210,11 @@ const MyCalendar = () => {
                 </Box>
 
                 <FormControl mt={4}>
-                  <FormLabel fontWeight={600} color={"black"}>来店時間</FormLabel>
+                  <FormLabel fontWeight={600} color={"black"}>
+                    来店時間
+                  </FormLabel>
                   <Input
-                  color={"black"}
+                    color={"black"}
                     type="time"
                     value={eventTime}
                     onChange={(e) => setEventTime(e.target.value)}
@@ -219,7 +223,12 @@ const MyCalendar = () => {
               </ModalBody>
 
               <ModalFooter>
-                <Button bg={"black"} color="white" mr={3} onClick={handleAddEvent}>
+                <Button
+                  bg={"black"}
+                  color="white"
+                  mr={3}
+                  onClick={handleAddEvent}
+                >
                   追加
                 </Button>
               </ModalFooter>
@@ -256,16 +265,15 @@ const MyCalendar = () => {
           <Footer />
         </>
       ) : (
-        <Flex justifyContent={"center"} alignItems={"center"} height= '100vh'>
-
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
+        <Flex justifyContent={"center"} alignItems={"center"} height="100vh">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
           />
-          </Flex>
+        </Flex>
       )}
     </>
   );

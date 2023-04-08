@@ -33,8 +33,7 @@ export default function ListCard({ data }: { data: UserInfo }) {
         <Flex align="center" justify="center" flex={1}>
           <Avatar
             size={{ base: "xl", md: "2xl" }}
-            name="Segun Adebayo"
-            src={data.facePhotos[0]}
+            src={data.facePhotos[0]?data.facePhotos[0]:"https://bit.ly/broken-link"} 
           />
         </Flex>
         <Stack
