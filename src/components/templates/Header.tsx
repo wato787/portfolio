@@ -24,14 +24,14 @@ import { MdLogout } from "react-icons/md";
 const Header = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<any>();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
       router.push("/");
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

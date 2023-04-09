@@ -25,3 +25,35 @@ export const matchedDataState = atom<TodayUserInfo[]>({
   key: "matchedDataState",
   default: [],
 });
+
+export const nailPhotoListState = atom<string[]>({
+  key: "nailPhotoListState",
+  default: [],
+});
+
+export const isLoadingState = atom<boolean>({
+  key: "isLoadingState",
+  default: false,
+});
+
+export const eventDateState = atom({
+  key: "eventDateState",
+  default: "",
+});
+
+
+export const eventTitleState = atom({
+  key: "eventTitleState",
+  default: "",
+});
+
+export const eventTimeState = atom({
+  key: "eventTimeState",
+  default: "",
+});
+
+
+
+
+
+

@@ -1,43 +1,28 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
 import {
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  FormControl,
-  Input,
-  ModalFooter,
   useDisclosure,
   Box,
   Flex,
-  Text,
   Spinner,
   IconButton,
-  Center,
 } from "@chakra-ui/react";
-import styles from "../../styles/InputTypeFile.module.scss";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
 import { useRouter } from "next/router";
 import useUserInfo from "@/hooks/useUserInfo";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { auth, db, storage } from "../../../firebase";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
-import { BiAddToQueue } from "react-icons/bi";
+import AddPhotoModal from "@/components/templates/AddPhotoModal";
+import { useRecoilState } from "recoil";
+import { nailPhotoListState } from "@/Recoil/atom";
 const Detail = () => {
   const [isImageOpen, setIsImageOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | undefined>("");
-  const [nailFiles, setNailFiles] = useState<File[]>([]);
-  const [nailPhotoList, setNailPhotoList] = useState<string[]>([]);
+  const [nailPhotoList, setNailPhotoList] = useRecoilState(nailPhotoListState);
   const [displayCount, setDisplayCount] = useState<number>(50);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
@@ -54,62 +39,18 @@ const Detail = () => {
     setIsImageOpen(false);
     setSelectedImage(undefined);
   };
-  // storageにいれる
-  const handleNailFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newFiles = Array.from(files);
-      setNailFiles([...nailFiles, ...newFiles]);
-    }
-  };
 
   // firestoreからデータ取得
   const info: UserInfo | undefined = useUserInfo(url);
 
-  // ログインユーザ情報取得
-  const user = auth.currentUser;
-
-  //  nailphoto追加
-  const AddNailPhotos = async (infoId: string) => {
-    setIsLoading(true);
-    const nailPhotosRefs: string[] = [];
-
-    for (const nailFile of nailFiles) {
-      const storageRef = ref(
-        storage,
-        `${user?.uid}/nailphotos/${nailFile.name}`
-      );
-      await uploadBytes(storageRef, nailFile);
-      const URL = await getDownloadURL(storageRef);
-      nailPhotosRefs.push(URL);
-    }
-
-    const infoDocRef = doc(db, "users", user!.uid, "info", infoId);
-    await updateDoc(infoDocRef, {
-      nailPhotos: arrayUnion(...nailPhotosRefs),
-    });
-
-    const updatedDoc = await getDoc(infoDocRef);
-    const updatedData = updatedDoc.data();
-    const updatedNailPhotoList = updatedData?.nailPhotos ?? [];
-    setNailPhotoList(updatedNailPhotoList);
-    setNailFiles([]);
-    onClose();
-    setIsLoading(false);
-  };
-
-  const cancelAddPhoto = () => {
-    setNailFiles([]);
-
-    onClose();
-  };
-
+  //  変更を監視
   useEffect(() => {
     if (info && info.nailPhotos) {
       setNailPhotoList(info.nailPhotos);
     } else {
       setNailPhotoList([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info, info?.nailPhotos]);
 
   // 表示するデータを格納
@@ -140,93 +81,7 @@ const Detail = () => {
               colorScheme="blackAlpha"
               size="lg"
             />
-
-            <Modal isOpen={isOpen} onClose={cancelAddPhoto}>
-              {/* スピナー */}
-              {isLoading && (
-                <Flex
-                  align={"center"}
-                  justify={"center"}
-                  h={"100%"}
-                  position={"fixed"}
-                  top={0}
-                  left={0}
-                  zIndex={9999}
-                  bg={"rgba(0, 0, 0, 0.5)"}
-                  w={"100%"}
-                >
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="blue.400"
-                    size="xl"
-                  />
-                </Flex>
-              )}
-              <ModalOverlay />
-              <ModalContent mx={6}>
-                <ModalHeader textAlign={"center"} color={"black"}>
-                  写真追加
-                </ModalHeader>
-                <ModalCloseButton color={"black"} />
-                <ModalBody pb={2}>
-                  <FormControl>
-                    <Center>
-                      <label className={styles.add} htmlFor="addFaceFile">
-                        <BiAddToQueue color="black" size={30} />
-                        <Input
-                          type="file"
-                          id="addFaceFile"
-                          multiple
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          onChange={handleNailFileChange}
-                        />
-                      </label>
-                    </Center>
-                    <Text fontSize={"sm"} color={"red.500"} pt={2}>
-                      ※同時画像ファイルアップロード10個まで
-                    </Text>
-                    {/* プレビュー表示 */}
-
-                    {nailFiles.length > 0 && (
-                      <Flex
-                        alignItems={"center"}
-                        justify={"center"}
-                        gap="4"
-                        wrap={"wrap"}
-                      >
-                        {nailFiles.map((file) => (
-                          <Box key={file.name}>
-                            <Box my={1}>
-                              <Image
-                                src={URL.createObjectURL(file)}
-                                alt="preview"
-                                width={100}
-                                height={100}
-                                layout="intrinsic"
-                              />
-                            </Box>
-                          </Box>
-                        ))}
-                      </Flex>
-                    )}
-                  </FormControl>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    bg={"black"}
-                    color="white"
-                    mr={3}
-                    onClick={() => AddNailPhotos(info.id)}
-                  >
-                    追加
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
+            <AddPhotoModal isOpen={isOpen} onClose={onClose} id={info.id}/>
           </Flex>
 
           {/* ネイル履歴写真リスト */}

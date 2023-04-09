@@ -18,8 +18,9 @@ const List = () => {
     return data.name.includes(searchValue);
   });
 
+  
   const displayData = filteredListData.slice(0, displayCount);
-
+  
   return (
     <>
       {user ? (

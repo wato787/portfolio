@@ -2,77 +2,44 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import Header from "../components/templates/Header";
 import Footer from "@/components/templates/Footer";
 import listPlugin from "@fullcalendar/list";
-import {
-  Box,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  FormControl,
-  Input,
-  ModalFooter,
-  Button,
-  Spinner,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
+import { Box, useDisclosure, Spinner, Flex } from "@chakra-ui/react";
 import FullCalendar from "@fullcalendar/react";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EventClickArg, EventInput } from "@fullcalendar/core";
 import { auth, db } from "../../firebase";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  onSnapshot,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import { FormLabel } from "@chakra-ui/react";
+
+import AddEventModal from "@/components/templates/AddEventModal";
+import {  useRecoilState } from 'recoil';
+import { eventDateState, eventTimeState, eventTitleState } from "@/Recoil/atom";
 
 const MyCalendar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const calendarRef = useRef<FullCalendar | null>(null);
-  const [eventTitle, setEventTitle] = useState("");
-  const [eventTime, setEventTime] = useState("");
-  const [eventDate, setEventDate] = useState("");
+  const [eventDate,setEventDate] = useRecoilState(eventDateState);
   const [events, setEvents] = useState<EventInput[]>([]);
+  const [eventTitle, setEventTitle] = useRecoilState(eventTitleState);
+  const [eventTime, setEventTime] = useRecoilState(eventTimeState);
   const [user] = useAuthState(auth);
   const router = useRouter();
   const [view, setView] = useState("dayGridMonth");
-  // 候補リストを管理するstate
-  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEventTitle(value);
+  const handleDateClick = (arg: DateClickArg) => {
+    setEventDate(arg.dateStr); // クリックした日付を設定する
+    onOpen();
+  };
 
-    // Firestoreから候補を検索してstateに保存する
-    const fetchData = async () => {
-      if (value !== "") {
-        // 入力値が空文字列でない場合にのみクエリを実行する
-        const q = query(
-          collection(db, "users", user!.uid, "info"),
-          where("name", ">=", value),
-          where("name", "<=", value + "\uf8ff")
-        );
-        const querySnapshot = await getDocs(q);
-        const data: string[] = querySnapshot.docs.map((doc) => doc.data().name);
-        setSuggestions(data);
-      } else {
-        setSuggestions([]); // 入力値が空文字列の場合には空の配列をセットする
-      }
-    };
-    fetchData();
+
+  const handleEventClick = (arg: EventClickArg) => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      const date = arg.event.start;
+      calendarApi.gotoDate(date!);
+      calendarApi.changeView("dayGridDay");
+    }
   };
 
   // 予定追加
@@ -112,19 +79,6 @@ const MyCalendar = () => {
     onClose();
   };
 
-  const handleDateClick = (arg: DateClickArg) => {
-    setEventDate(arg.dateStr); // クリックした日付を設定する
-    onOpen();
-  };
-
-  const handleEventClick = (arg: EventClickArg) => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      const date = arg.event.start;
-      calendarApi.gotoDate(date!);
-      calendarApi.changeView("dayGridDay");
-    }
-  };
   // urlで表示変更
   useEffect(() => {
     if (router.query.view === "listWeek") {
@@ -163,77 +117,8 @@ const MyCalendar = () => {
       {user ? (
         <>
           <Header />
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent mx={4}>
-              <ModalHeader color={"black"}>
-                {new Date(eventDate).toLocaleDateString("ja-JP", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </ModalHeader>
-
-              <ModalCloseButton color={"black"} />
-              <ModalBody pb={6}>
-                <FormControl>
-                  <Text mb={1} fontSize={"sm"} color={"black"}>
-                    ※顧客リストと同じ名前を入力してください
-                  </Text>
-                  <Input
-                  autoFocus
-                    type="text"
-                    color={"black"}
-                    placeholder="名前"
-                    value={eventTitle}
-                    onChange={handleTitleChange}
-                  />
-                </FormControl>
-
-                {/* 候補リスト */}
-                <Box mt={2}>
-                  {suggestions.map((suggestion, index) => (
-                    <Button
-                      key={index}
-                      size="sm"
-                      bg={"black"}
-                      color={"white"}
-                      m={2}
-                      onClick={() => {
-                        setEventTitle(suggestion);
-                        setSuggestions([]);
-                      }}
-                    >
-                      {suggestion}
-                    </Button>
-                  ))}
-                </Box>
-
-                <FormControl mt={4}>
-                  <FormLabel fontWeight={600} color={"black"}>
-                    来店時間
-                  </FormLabel>
-                  <Input
-                    color={"black"}
-                    type="time"
-                    value={eventTime}
-                    onChange={(e) => setEventTime(e.target.value)}
-                  />
-                </FormControl>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  bg={"black"}
-                  color="white"
-                  mr={3}
-                  onClick={handleAddEvent}
-                >
-                  追加
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          {/* 予定追加モーダル */}
+          <AddEventModal isOpen={isOpen} onClose={onClose} handleAddEvent={handleAddEvent}/>
 
           <Box fontSize={12} mt={20} mx={2} pb={{ base: "72px" }}>
             <FullCalendar

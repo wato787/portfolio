@@ -1,61 +1,16 @@
 import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import { auth } from "../../firebase";
-import { TodayUserInfo, UserInfo, TodayEventData } from "../types/type";
+import { TodayUserInfo } from "../types/type";
 import InfoCard from "../components/organisms/InfoCard";
 import Footer from "@/components/templates/Footer";
 import Header from "@/components/templates/Header";
-import { useListData } from "@/hooks/useListData";
-import { format } from "date-fns";
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { matchedDataState } from "../Recoil/atom";
-import { useFetchTodayEvents } from "../hooks/useFetchToadyEvents";
+
+import { useTodayUserData } from "@/hooks/useTodayUserData";
 
 function Home() {
-
-  // ページ全体にロジックが多く記述されているのでなるべくリターン以外のコードは別に切り分けできるとなおよいです！(index.tsxと同じ意味)
-  const listData: UserInfo[] = useListData();
-  // ↓変数名がわかりにくいかもですね、何が入る変数なのか第三者でもわかる変数名にしましょう！
-  const [matchedData, setMatchedData] = useRecoilState(matchedDataState);
+  const todayList = useTodayUserData();
   const user = auth.currentUser;
-  // 今日のイベントを取得
-  const todayEvents = useFetchTodayEvents();
-  // 昇順に並び替え
-  useEffect(() => {
-    const matched = listData.filter((data) =>
-    todayEvents.some(
-      (event) => event.title === data.name && (!event.visited || event.visited !== true)
-    )
-  );
-  // ↓これも同じく変数名修正できたらなおよしです👍
-  const matchedWithData = matched.map((data: UserInfo) => {
-    const todayEventData = todayEvents.find(
-      (event) => event.title === data.name && (!event.visited || event.visited !== true)
-    );
-      const startTime = format(
-        new Date(todayEventData!.start.seconds * 1000),
-        "HH:mm"
-      );
-      return {
-        ...data,
-        start: startTime,
-        eventId: todayEventData!.id,
-      };
-    });
-
-    matchedWithData.sort((a, b) => {
-      if (a.start < b.start) {
-        return -1;
-      }
-      if (a.start > b.start) {
-        return 1;
-      }
-      return 0;
-    });
-    setMatchedData(matchedWithData);
-  }, [listData, todayEvents, setMatchedData]);
-
   return (
     <>
       {user ? (
@@ -70,7 +25,7 @@ function Home() {
               </Heading>
             </Flex>
             <Stack>
-              {matchedData.map((data: TodayUserInfo) => (
+              {todayList.map((data: TodayUserInfo) => (
                 <InfoCard key={data.id} data={data} />
               ))}
             </Stack>

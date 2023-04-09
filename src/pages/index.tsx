@@ -1,4 +1,3 @@
-
 import {
   Flex,
   Box,
@@ -40,7 +39,7 @@ export default function Login() {
   const [password, setPassword] = useRecoilState<string>(passwordState);
 
   const [error, setError] = useState<unknown>("");
-  // モーダルが２つある為それぞれなづけ
+  // モーダルが２つある為それぞれ名付け
   const {
     isOpen: isCreateModalOpen,
     onOpen: onCreateModalOpen,
@@ -61,6 +60,14 @@ export default function Login() {
   // メールアドレスとパスワードでログイン
   const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (!email || !password) {
+      setError("メールアドレスとパスワードを入力してください。");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("正しいメールアドレスを入力してください。");
+      return;
+    }
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail("");
@@ -70,8 +77,17 @@ export default function Login() {
       setError(error);
     }
   };
+  
 
   const handleSignUp = async () => {
+    if (!createEmail || !createPassword) {
+      setError("メールアドレスとパスワードを入力してください。");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(createEmail)) {
+      setError("正しいメールアドレスを入力してください。");
+      return;
+    }
     try {
       await createUserWithEmailAndPassword(auth, createEmail, createPassword);
       setCreateEmail("");
@@ -90,6 +106,10 @@ export default function Login() {
   };
 
   const handleResetPassword = async () => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("正しいメールアドレスを入力してください。");
+      return;
+    }
     try {
       await sendPasswordResetEmail(auth, email);
       alert("パスワードリセットのメールを送信しました。");
@@ -148,7 +168,7 @@ export default function Login() {
                       id="email"
                       type="email"
                       value={createEmail}
-                      onChange={(event) => setCreateEmail(event.target.value)}
+                      onChange={(e) => setCreateEmail(e.target.value)}
                       placeholder="メールアドレス"
                     />
 
@@ -175,7 +195,6 @@ export default function Login() {
                   >
                     作成
                   </Button>
-
                 </ModalFooter>
               </ModalContent>
             </Modal>
@@ -249,7 +268,7 @@ export default function Login() {
                               id="email"
                               type="email"
                               value={email}
-                              onChange={(event) => setEmail(event.target.value)}
+                              onChange={(e) => setEmail(e.target.value)}
                               placeholder="メールアドレス"
                             />
                           </FormControl>
@@ -263,7 +282,6 @@ export default function Login() {
                           >
                             メール送信
                           </Button>
-
                         </ModalFooter>
                       </ModalContent>
                     </Modal>
