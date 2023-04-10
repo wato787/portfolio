@@ -11,6 +11,7 @@ import { useTodayUserData } from "@/hooks/useTodayUserData";
 function Home() {
   const todayList = useTodayUserData();
   const user = auth.currentUser;
+
   return (
     <>
       {user ? (

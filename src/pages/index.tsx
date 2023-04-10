@@ -58,7 +58,7 @@ export default function Login() {
       setPassword("");
       router.push("/home");
     } catch (error: unknown) {
-      setError(error);
+      alert(error);
     }
   };
 

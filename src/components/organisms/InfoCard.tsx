@@ -6,7 +6,6 @@ import {
   Heading,
   Stack,
   Text,
-  Box,
   Button,
 } from "@chakra-ui/react";
 import { auth, db } from "../../../firebase";
