@@ -16,7 +16,7 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { UserInfo } from "@/types/type";
 import InfoAccordion from "../../components/organisms/InfoAccordion";
 import Image from "next/image";
-import AddPhotoModal from "@/components/templates/AddPhotoModal";
+import AddPhotoModal from "@/components/organisms/AddPhotoModal";
 import { useRecoilState } from "recoil";
 import { nailPhotoListState } from "@/Recoil/atom";
 const Detail = () => {

@@ -34,7 +34,7 @@ import { eventDateState, eventTimeState, eventTitleState } from "@/Recoil/atom";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  handleAddEvent:any
+  handleAddEvent:()=>void;
 }
 
 const AddEventModal = ({ isOpen, onClose,handleAddEvent }: Props) => {

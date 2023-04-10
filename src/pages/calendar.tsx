@@ -12,7 +12,7 @@ import { addDoc, collection, doc, onSnapshot, serverTimestamp, updateDoc } from 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 
-import AddEventModal from "@/components/templates/AddEventModal";
+import AddEventModal from "@/components/organisms/AddEventModal";
 import {  useRecoilState } from 'recoil';
 import { eventDateState, eventTimeState, eventTitleState } from "@/Recoil/atom";
 

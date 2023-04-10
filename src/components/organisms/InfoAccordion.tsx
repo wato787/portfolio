@@ -15,12 +15,13 @@ import {
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
-import AccordionItemPanel from "../atoms/AccordionItemPanel";
+
 import { Button } from "@chakra-ui/react";
 import { useRef } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { useRouter } from "next/router";
+import AccordionItemPanel from "../molucules/AccordionItemPanel";
 
 const InfoAccordion = ({ info }: { info: UserInfo }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

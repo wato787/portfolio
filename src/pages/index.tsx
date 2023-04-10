@@ -6,30 +6,19 @@ import {
   useColorModeValue,
   Button,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
   FormControl,
-  FormLabel,
   Input,
-  ModalFooter,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { MouseEvent, useState } from "react";
-import { auth, db } from "../../firebase";
+import { MouseEvent } from "react";
+import { auth } from "../../firebase";
 import { useRecoilState } from "recoil";
-import { emailState, passwordState } from "@/Recoil/atom";
-import {
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { createEmailState, createPasswordState } from "../Recoil/atom";
-import { doc, setDoc } from "firebase/firestore";
+import { emailState, errorState, passwordState } from "@/Recoil/atom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import LoginModal from "@/components/organisms/SignUpModal";
+import ResetPasswordModal from "@/components/organisms/ResetPasswordModal";
 
 // ログインページ
 export default function Login() {
@@ -38,7 +27,7 @@ export default function Login() {
   const [email, setEmail] = useRecoilState<string>(emailState);
   const [password, setPassword] = useRecoilState<string>(passwordState);
 
-  const [error, setError] = useState<unknown>("");
+  const [error, setError] = useRecoilState(errorState);
   // モーダルが２つある為それぞれ名付け
   const {
     isOpen: isCreateModalOpen,
@@ -50,12 +39,6 @@ export default function Login() {
     onOpen: onResetModalOpen,
     onClose: onResetModalClose,
   } = useDisclosure();
-
-  // サインアップ情報
-  const [createEmail, setCreateEmail] =
-    useRecoilState<string>(createEmailState);
-  const [createPassword, setCreatePassword] =
-    useRecoilState<string>(createPasswordState);
 
   // メールアドレスとパスワードでログイン
   const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -74,48 +57,6 @@ export default function Login() {
       setPassword("");
       router.push("/home");
     } catch (error: unknown) {
-      setError(error);
-    }
-  };
-  
-
-  const handleSignUp = async () => {
-    if (!createEmail || !createPassword) {
-      setError("メールアドレスとパスワードを入力してください。");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(createEmail)) {
-      setError("正しいメールアドレスを入力してください。");
-      return;
-    }
-    try {
-      await createUserWithEmailAndPassword(auth, createEmail, createPassword);
-      setCreateEmail("");
-      setCreatePassword("");
-      // ユーザをFirestoreに保存する
-      const user = auth.currentUser;
-      const usersRef = doc(db, "users", user!.uid);
-      await setDoc(usersRef, {
-        id: user!.uid,
-        email: createEmail,
-      });
-      router.push("/home");
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  };
-
-  const handleResetPassword = async () => {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("正しいメールアドレスを入力してください。");
-      return;
-    }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      alert("パスワードリセットのメールを送信しました。");
-      onResetModalClose();
-    } catch (error: unknown) {
-      console.error(error);
       setError(error);
     }
   };
@@ -143,7 +84,7 @@ export default function Login() {
             >
               Ohung
             </Heading>
-            {/* クリエイト */}
+            {/* サインアップ */}
             <Text
               _hover={{ cursor: "pointer", color: "blue.600" }}
               color={"blue.300"}
@@ -153,51 +94,11 @@ export default function Login() {
             >
               新規作成はこちら
             </Text>
-
-            <Modal isOpen={isCreateModalOpen} onClose={onCreateModalClose}>
-              <ModalOverlay />
-              <ModalContent mx={6}>
-                <ModalHeader textAlign={"center"} color={"black"}>
-                  アカウント新規作成
-                </ModalHeader>
-                <ModalCloseButton color={"black"} />
-                <ModalBody pb={2}>
-                  <FormControl>
-                    <Input
-                      color={"black"}
-                      id="email"
-                      type="email"
-                      value={createEmail}
-                      onChange={(e) => setCreateEmail(e.target.value)}
-                      placeholder="メールアドレス"
-                    />
-
-                    <Input
-                      mt={6}
-                      color={"black"}
-                      id="password"
-                      type="password"
-                      value={createPassword}
-                      onChange={(event) =>
-                        setCreatePassword(event.target.value)
-                      }
-                      placeholder="パスワード"
-                    />
-                  </FormControl>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    onClick={handleSignUp}
-                    bg="black"
-                    color={"white"}
-                    mr={3}
-                  >
-                    作成
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
+            {/* サインアップモーダル */}
+            <LoginModal
+              isOpen={isCreateModalOpen}
+              onClose={onCreateModalClose}
+            />
           </Stack>
           <Box
             rounded={"lg"}
@@ -206,7 +107,7 @@ export default function Login() {
             p={8}
           >
             <Stack spacing={4}>
-              {/* <MailInput /> */}
+
               <FormControl>
                 <Input
                   color={"black"}
@@ -243,48 +144,11 @@ export default function Login() {
                     >
                       パスワードをお忘れですか？
                     </Text>
-                    <Modal
+                    {/* パスワードリセットモーダル */}
+                    <ResetPasswordModal
                       isOpen={isResetModalOpen}
                       onClose={onResetModalClose}
-                    >
-                      <ModalOverlay />
-                      <ModalContent
-                        mx={6}
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <ModalHeader textAlign={"center"} color={"black"}>
-                          リセットURLの送信先
-                        </ModalHeader>
-                        <ModalCloseButton color={"black"} />
-                        <ModalBody pb={6}>
-                          <FormControl>
-                            <FormLabel color={"black"}>
-                              メールアドレス
-                            </FormLabel>
-                            <Input
-                              w={"300px"}
-                              color={"black"}
-                              id="email"
-                              type="email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              placeholder="メールアドレス"
-                            />
-                          </FormControl>
-                        </ModalBody>
-                        <ModalFooter>
-                          <Button
-                            mr={3}
-                            onClick={handleResetPassword}
-                            bg="black"
-                            color={"white"}
-                          >
-                            メール送信
-                          </Button>
-                        </ModalFooter>
-                      </ModalContent>
-                    </Modal>
+                    />
                   </Stack>
                   <Button
                     onClick={handleLogin}
