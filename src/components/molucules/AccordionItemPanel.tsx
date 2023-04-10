@@ -55,7 +55,6 @@ const AccordionItemPanel = ({
         justifyContent="space-between"
         alignItems="center"
         fontSize="md"
-        pb={2}
       >
         {isEditing ? (
           <>
@@ -74,7 +73,7 @@ const AccordionItemPanel = ({
           <>
 
               <Text fontSize={"sm"} whiteSpace={"nowrap"}> {beforeValue}</Text>
-              <Text  pl={2} w={"240px"} whiteSpace={"pre-wrap"}>
+              <Text fontWeight={"500"} fontSize="md"  pl={2} w={"240px"} whiteSpace={"pre-wrap"}>
                 {text}
               </Text>
 

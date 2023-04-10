@@ -15,7 +15,7 @@ import { MouseEvent } from "react";
 import { auth } from "../../firebase";
 import { useRecoilState } from "recoil";
 import { emailState, errorState, passwordState } from "@/Recoil/atom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
 
 import LoginModal from "@/components/organisms/SignUpModal";
 import ResetPasswordModal from "@/components/organisms/ResetPasswordModal";
@@ -53,6 +53,7 @@ export default function Login() {
     }
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      await setPersistence(auth, browserSessionPersistence);
       setEmail("");
       setPassword("");
       router.push("/home");
