@@ -27,12 +27,13 @@ const MyCalendar = () => {
   const router = useRouter();
   const [view, setView] = useState("dayGridMonth");
 
+// クリックした日付を設定する
   const handleDateClick = (arg: DateClickArg) => {
-    setEventDate(arg.dateStr); // クリックした日付を設定する
+    setEventDate(arg.dateStr); 
     onOpen();
   };
 
-
+// 日付クリックで月表示から日表示に
   const handleEventClick = (arg: EventClickArg) => {
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
@@ -62,7 +63,7 @@ const MyCalendar = () => {
         );
         await updateDoc(doc(docRef.parent, docRef.id), { id: docRef.id });
 
-        // カレンダーにイベントが追加されていない場合にのみ追加する
+        // カレンダーにイベントが追加されていない場合にのみ追加する。(この処理が無いと２つ表示されてしまう)
         const calendarApi = calendarRef.current.getApi();
         if (!calendarApi.getEventById(docRef.id)) {
           calendarApi.addEvent({
@@ -86,6 +87,7 @@ const MyCalendar = () => {
     }
   }, [router.query.view]);
 
+// 予定取得
   useEffect(() => {
     if (!user) return;
 

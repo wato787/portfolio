@@ -8,6 +8,8 @@ import { useListData } from "@/hooks/useListData";
 import { UserInfo } from "@/types/type";
 import AddCustomerButton from "@/components/atoms/AddCustomerButton";
 
+
+
 const List = () => {
   const user = auth.currentUser;
   const listData: UserInfo[] = useListData();

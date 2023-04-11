@@ -4,30 +4,25 @@ import {
   Stack,
   Heading,
   useColorModeValue,
-  Button,
   useDisclosure,
   FormControl,
   Input,
   Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { MouseEvent } from "react";
-import { auth } from "../../firebase";
-import { useRecoilState } from "recoil";
+
+import { useRecoilState, useRecoilValue } from "recoil";
 import { emailState, errorState, passwordState } from "@/Recoil/atom";
-import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
 
 import LoginModal from "@/components/organisms/SignUpModal";
 import ResetPasswordModal from "@/components/organisms/ResetPasswordModal";
+import LoginButton from "@/components/atoms/LoginButton";
 
 // ログインページ
 export default function Login() {
-  const router = useRouter();
   // ログイン情報
   const [email, setEmail] = useRecoilState<string>(emailState);
   const [password, setPassword] = useRecoilState<string>(passwordState);
-
-  const [error, setError] = useRecoilState(errorState);
+  const error = useRecoilValue(errorState);
   // モーダルが２つある為それぞれ名付け
   const {
     isOpen: isCreateModalOpen,
@@ -39,28 +34,6 @@ export default function Login() {
     onOpen: onResetModalOpen,
     onClose: onResetModalClose,
   } = useDisclosure();
-
-  // メールアドレスとパスワードでログイン
-  const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError("メールアドレスとパスワードを入力してください。");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("正しいメールアドレスを入力してください。");
-      return;
-    }
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      await setPersistence(auth, browserSessionPersistence);
-      setEmail("");
-      setPassword("");
-      router.push("/home");
-    } catch (error: unknown) {
-      alert(error);
-    }
-  };
 
   return (
     <>
@@ -108,7 +81,6 @@ export default function Login() {
             p={8}
           >
             <Stack spacing={4}>
-
               <FormControl>
                 <Input
                   color={"black"}
@@ -151,16 +123,8 @@ export default function Login() {
                       onClose={onResetModalClose}
                     />
                   </Stack>
-                  <Button
-                    onClick={handleLogin}
-                    bg={"black"}
-                    color={"white"}
-                    _hover={{
-                      bg: "blue.900",
-                    }}
-                  >
-                    ログイン
-                  </Button>
+                  {/* ログインボタン */}
+                  <LoginButton />
                   {error && (
                     <Box
                       bg="red.100"

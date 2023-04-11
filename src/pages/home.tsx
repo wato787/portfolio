@@ -9,6 +9,8 @@ import Header from "@/components/templates/Header";
 import { useTodayUserData } from "@/hooks/useTodayUserData";
 
 function Home() {
+
+
   const todayList = useTodayUserData();
   const user = auth.currentUser;
 
@@ -49,3 +51,4 @@ function Home() {
 }
 
 export default Home;
+
